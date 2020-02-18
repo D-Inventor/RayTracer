@@ -1,9 +1,26 @@
 {
   "WindowSize": {
-    "Width": 500,
-    "Height": 500
+    "Width": 1000,
+    "Height": 1000
   },
   "Scene": {
+    "LightSources": [
+      {
+        "Type": "Point",
+        "Position": {
+          "X": 1.0,
+          "Y": 3.0,
+          "Z": 0.0
+        },
+        "Rotation": {
+          "W": 1.0,
+          "X": 0.0,
+          "Y": 0.0,
+          "Z": 0.0
+        },
+        "Brightness": 2.0
+      }
+    ],
     "Materials": [
       {
         "Name": "ExampleMaterial",
@@ -153,20 +170,20 @@
           1.0,
           1.0, // top right
           1.0,
-         -1.0,
+          -1.0,
           0.0,
           1.0,
           0.0, // bottom right
-         -1.0,
-         -1.0,
+          -1.0,
+          -1.0,
           0.0,
           0.0,
           0.0, // bottom left
-         -1.0,
+          -1.0,
           1.0,
           0.0,
           0.0,
-          1.0  // top left
+          1.0 // top left
         ],
         "Elements": [
           0,
