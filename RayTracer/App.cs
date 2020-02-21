@@ -32,6 +32,7 @@ namespace RayTracer
             }
 
             ClientSize = client.WindowSize;
+            Title = "RayTracer";
 
             scene = SceneFactory.CreateScene(client.Scene);
 
