@@ -23,6 +23,8 @@ namespace RayTracer
 
         protected override void OnLoad(EventArgs e)
         {
+            LogDeviceInformation();
+
             ClientModel client;
             using (StreamReader sr = new StreamReader(Path.Combine(Directory.GetCurrentDirectory(), "Json", "model.json")))
             {
@@ -33,7 +35,6 @@ namespace RayTracer
 
             scene = SceneFactory.CreateScene(client.Scene);
 
-
             GL.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
             GL.Enable(EnableCap.Texture2D);
             GL.Disable(EnableCap.DepthTest);
@@ -43,6 +44,16 @@ namespace RayTracer
             scene.Camera.Render();
 
             base.OnLoad(e);
+        }
+
+        private static void LogDeviceInformation()
+        {
+            string OpenGLContext = GL.GetString(StringName.Vendor);
+            string graphicsCard = GL.GetString(StringName.Renderer);
+            string version = GL.GetString(StringName.Version);
+            string slversion = GL.GetString(StringName.ShadingLanguageVersion);
+            Console.WriteLine($"Using '{graphicsCard}' from '{OpenGLContext}' version '{version}'");
+            Console.WriteLine($"Supports shader language version {slversion}");
         }
 
         protected override void OnUnload(EventArgs e)
