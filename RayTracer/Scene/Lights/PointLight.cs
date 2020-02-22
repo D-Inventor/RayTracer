@@ -1,4 +1,5 @@
 ﻿using OpenTK;
+using OpenTK.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace RayTracer.Scene.Lights
 {
     public class PointLight : LightBase
     {
-        public PointLight(Vector3 position, Quaternion rotation, double brightness) : base(position, rotation, brightness)
+        public PointLight(Vector3 position, Quaternion rotation, double brightness, Color4 colour) : base(position, rotation, brightness, colour)
         { }
 
         public override double GetBrightnessAtPosition(Vector3 position)

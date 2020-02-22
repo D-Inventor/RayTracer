@@ -50,7 +50,7 @@ namespace RayTracer.Factories
                 switch (light.Type)
                 {
                     case "Point":
-                        result.Add(new PointLight(light.Position, light.Rotation, light.Brightness));
+                        result.Add(new PointLight(light.Position, light.Rotation, light.Brightness, light.Colour));
                         break;
                     default:
                         Console.WriteLine($"No conversion is available for a light of type '{light.Type}'");

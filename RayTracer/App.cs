@@ -17,9 +17,9 @@ namespace RayTracer
     {
         private Scene.Scene scene;
 
-        private string mesh = "RenderMesh";
-        private string texture = "RenderTexture";
-        private string shader = "DefaultProgram";
+        private readonly string mesh = "RenderMesh";
+        private readonly string texture = "RenderTexture";
+        private readonly string shader = "DefaultProgram";
 
         protected override void OnLoad(EventArgs e)
         {

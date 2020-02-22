@@ -30,9 +30,9 @@ namespace RayTracer.Scene.Shapes
 
                 double sfinal;
 
-                if (s2 > 0)
+                if (s2 > 0.001)
                     sfinal = s2;
-                else if (s1 > 0)
+                else if (s1 > 0.001)
                     sfinal = s1;
                 else
                 {

@@ -142,19 +142,30 @@ namespace RayTracer.Scene
                 Color4 result = Color4.Black;
                 foreach(var light in Scene.Lights.Where(l => Vector3.Dot(l.Position - collision.Position, collision.Normal) > 0))
                 {
-                    var lightdirection = light.Position - collision.Position;
+                    var lightposition = light.Position;
+                    var lightdirection = lightposition - collision.Position;
                     if(Vector3.Dot(lightdirection, collision.Normal) <= 0)
                     {
                         continue;
                     }
-                    lightdirection.Normalize();
-                    var effectiveness = Vector3.Dot(lightdirection, collision.Normal);
 
-                    var brightness = light.GetBrightnessAtPosition(collision.Position);
-                    var collisionColour = collision.Material.Colour;
-                    result.R = (float)MathHelper.Clamp(collisionColour.R * brightness * effectiveness + result.R, 0, 1);
-                    result.G += (float)MathHelper.Clamp(collisionColour.G * brightness * effectiveness + result.G, 0, 1);
-                    result.B += (float)MathHelper.Clamp(collisionColour.B * brightness * effectiveness + result.B, 0, 1);
+                    // test if the light source is obstructed
+                    Ray lightRay = new Ray()
+                    {
+                        Direction = lightposition - collision.Position,
+                        Position = collision.Position
+                    };
+                    if(!Collider.TryGetCollision(lightRay, out var lightCollision) || (lightCollision.Position - collision.Position).LengthSquared > lightdirection.LengthSquared)
+                    {
+                        lightdirection.Normalize();
+                        var effectiveness = Vector3.Dot(lightdirection, collision.Normal);
+
+                        var brightness = light.GetBrightnessAtPosition(collision.Position);
+                        var collisionColour = collision.Material.Colour;
+                        result.R = (float)MathHelper.Clamp(collisionColour.R * brightness * effectiveness * light.Colour.R + result.R, 0, 1);
+                        result.G += (float)MathHelper.Clamp(collisionColour.G * brightness * effectiveness * light.Colour.G + result.G, 0, 1);
+                        result.B += (float)MathHelper.Clamp(collisionColour.B * brightness * effectiveness * light.Colour.B + result.B, 0, 1);
+                    }
                 }
 
                 result.A = (float)(1 - collision.Material.Reflectiveness);
