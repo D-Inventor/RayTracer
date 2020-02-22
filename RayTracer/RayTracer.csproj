@@ -51,9 +51,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.cs" />
+    <Compile Include="Extensions\IEnumerableExtensions.cs" />
     <Compile Include="Factories\MeshFactory.cs" />
     <Compile Include="Factories\SceneFactory.cs" />
     <Compile Include="Factories\TextureFactory.cs" />
+    <Compile Include="Helpers\CollisionHelper.cs" />
     <Compile Include="Interfaces\ICollider.cs" />
     <Compile Include="Json\LightConverter.cs" />
     <Compile Include="Json\TextureConverter.cs" />

@@ -1,5 +1,7 @@
 ﻿using OpenTK;
 using OpenTK.Graphics.OpenGL4;
+
+using RayTracer.Helpers;
 using RayTracer.Interfaces;
 using RayTracer.Models;
 using RayTracer.Models.Shapes;
@@ -27,9 +29,8 @@ namespace RayTracer.Factories
             IDictionary<string, Shader> shaders = CreateShaderPrograms(model);
             IDictionary<string, Mesh> meshes = CreateMeshes(model);
             Camera camera = CreateCamera(model, textures, materials);
-            camera.Collider = new ColliderCollection(shapes.Cast<ICollider>());
 
-            return new Scene.Scene
+            Scene.Scene result = new Scene.Scene
             {
                 Textures = textures,
                 Materials = materials,
@@ -39,13 +40,19 @@ namespace RayTracer.Factories
                 Camera = camera,
                 Lights = lights
             };
+
+            result.Camera.Collider = new ColliderCollection(result.Shapes.Cast<ICollider>());
+            result.Camera.CollisionHelper = new CollisionHelper(result, result.Camera.Collider);
+            result.Camera.SetRenderQueue(result.Camera.GetCollisions());
+
+            return result;
         }
 
         private static ICollection<LightBase> CreateLights(SceneModel model)
         {
             List<LightBase> result = new List<LightBase>();
             Console.WriteLine("Creating lights");
-            foreach(var light in model.LightSources)
+            foreach (Models.Lights.LightModel light in model.LightSources)
             {
                 switch (light.Type)
                 {

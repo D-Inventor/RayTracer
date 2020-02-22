@@ -29,9 +29,9 @@ namespace RayTracer.Models.RayTracer
         {
             if (used) { return; }
 
-            byte r = (byte)Math.Floor((colour.R * Contribution * colour.A) * 255),
-                 g = (byte)Math.Floor((colour.G * Contribution * colour.A) * 255),
-                 b = (byte)Math.Floor((colour.B * Contribution * colour.A) * 255);
+            byte r = (byte)Math.Floor(colour.R * Contribution * colour.A * 255),
+                 g = (byte)Math.Floor(colour.G * Contribution * colour.A * 255),
+                 b = (byte)Math.Floor(colour.B * Contribution * colour.A * 255);
 
             int result = (r << 16) + (g << 8) + (b);
             Texture[X, Y] += result;

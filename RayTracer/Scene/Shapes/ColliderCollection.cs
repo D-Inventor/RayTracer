@@ -1,10 +1,8 @@
 ﻿using RayTracer.Interfaces;
 using RayTracer.Models.RayTracer;
-using System;
+
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RayTracer.Scene.Shapes
 {
@@ -17,24 +15,23 @@ namespace RayTracer.Scene.Shapes
             this.colliders = colliders;
         }
 
-        public bool TryGetCollision(Ray ray, out Collision collision)
+        public bool TryGetCollision(Ray ray, out IEnumerable<Collision> collision)
         {
-            collision = null;
-            float distanceSqr = float.MaxValue;
-            foreach(var collider in colliders)
-            {
-                if(collider.TryGetCollision(ray, out var result))
-                {
-                    var resultDistance = (result.Position - ray.Position).LengthSquared;
-                    if(resultDistance < distanceSqr)
-                    {
-                        collision = result;
-                        distanceSqr = resultDistance;
-                    }
-                }
-            }
+            collision = TryGetCollision(ray);
 
-            return collision != null;
+            return collision != null && collision.Any();
+        }
+
+        private IEnumerable<Collision> TryGetCollision(Ray ray)
+        {
+            return colliders.SelectMany(collider =>
+            {
+                if (collider.TryGetCollision(ray, out IEnumerable<Collision> collisions))
+                {
+                    return collisions;
+                }
+                return Enumerable.Empty<Collision>();
+            });
         }
     }
 }

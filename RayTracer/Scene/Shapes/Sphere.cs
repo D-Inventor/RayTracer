@@ -1,7 +1,9 @@
 ﻿using OpenTK;
+
 using RayTracer.Models.RayTracer;
+
 using System;
-using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace RayTracer.Scene.Shapes
 {
@@ -9,7 +11,7 @@ namespace RayTracer.Scene.Shapes
     {
         public double Radius { get; set; }
 
-        public override bool TryGetCollision(Ray ray, out Collision collision)
+        public override bool TryGetCollision(Ray ray, out IEnumerable<Collision> collision)
         {
             Vector3 position = Transform.ExtractTranslation();
 
@@ -40,14 +42,18 @@ namespace RayTracer.Scene.Shapes
                     return false;
                 }
 
-                var collisionPosition = ray.Position + ray.Direction * (float)sfinal;
+                Vector3 collisionPosition = ray.Position + ray.Direction * (float)sfinal;
 
-                collision = new Collision
+                collision = new List<Collision>
                 {
-                    InDirection = ray.Direction,
-                    Material = this.Material,
-                    Position = collisionPosition,
-                    Normal = collisionPosition - position
+                    new Collision
+                    {
+                        InDirection = ray.Direction,
+                        Material = Material,
+                        Position = collisionPosition,
+                        Normal = collisionPosition - position,
+                        DistanceSqr = (collisionPosition - ray.Position).LengthSquared
+                    }
                 };
                 return true;
             }

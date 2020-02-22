@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
 
 using OpenTK;
-using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Input;
 
@@ -40,10 +39,6 @@ namespace RayTracer
             GL.Enable(EnableCap.Texture2D);
             GL.Disable(EnableCap.DepthTest);
             GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Nicest);
-
-            scene.Camera.Scene = scene;
-            scene.Camera.SetRenderQueue(scene.Camera.GetCollisions());
-            scene.Camera.Render();
 
             base.OnLoad(e);
         }

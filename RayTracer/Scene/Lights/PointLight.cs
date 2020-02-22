@@ -1,10 +1,5 @@
 ﻿using OpenTK;
 using OpenTK.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RayTracer.Scene.Lights
 {
@@ -15,7 +10,7 @@ namespace RayTracer.Scene.Lights
 
         public override double GetBrightnessAtPosition(Vector3 position)
         {
-            var distanceSqr = (position - transform.ExtractTranslation()).LengthSquared;
+            float distanceSqr = (position - transform.ExtractTranslation()).LengthSquared;
 
             return brightness / distanceSqr;
         }

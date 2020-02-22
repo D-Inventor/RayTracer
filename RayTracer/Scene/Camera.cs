@@ -1,13 +1,16 @@
 ﻿using OpenTK;
 using OpenTK.Graphics;
+
+using RayTracer.Extensions;
+using RayTracer.Helpers;
 using RayTracer.Interfaces;
 using RayTracer.Models.RayTracer;
+
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace RayTracer.Scene
 {
@@ -21,7 +24,7 @@ namespace RayTracer.Scene
         private Matrix4 transform;
         private readonly Texture texture;
         private readonly Material material;
-        int maxItems = 50000;
+        private int maxItems = 50000;
 
         private static Vector3 Up => Vector3.UnitY;
         private static Vector3 Forward => Vector3.UnitZ;
@@ -42,7 +45,7 @@ namespace RayTracer.Scene
         }
 
         public ICollider Collider { get; set; }
-        public Scene Scene { get; set; }
+        public CollisionHelper CollisionHelper { get; set; }
 
         public ConcurrentQueue<Collision> GetCollisions()
         {
@@ -82,7 +85,7 @@ namespace RayTracer.Scene
         public void SetRenderQueue(ConcurrentQueue<Collision> collisions)
         {
             // empty the current queue
-            while (collisionQueue?.TryDequeue(out var _) ?? false) ;
+            while (collisionQueue?.TryDequeue(out Collision _) ?? false) ;
 
             collisionQueue = collisions;
         }
@@ -97,21 +100,27 @@ namespace RayTracer.Scene
             //Parallel.For(0, maxItems, (index) =>
             for (int index = 0; index < maxItems; index++)
             {
-                if (collisionQueue.TryDequeue(out var collision))
+                if (collisionQueue.TryDequeue(out Collision collision))
                 {
-                    UseColour(collision);
-
-                    Ray ray = new Ray
+                    if (collision.Material.Reflectiveness != 1)
                     {
-                        Direction = collision.GetReflection(),
-                        Position  = collision.Position
-                    };
+                        Color4 result = CollisionHelper.FindColourAtCollision(collision);
 
-                    if (collision.Depth < 1 && Collider.TryGetCollision(ray, out var reflectCollision))
+                        collision.Pixel.Use(result);
+                    }
+
+                    if (collision.Depth < 1)
                     {
-                        reflectCollision.Depth = collision.Depth + 1;
-                        reflectCollision.Pixel = new PixelReference((float)collision.Material.Reflectiveness * collision.Pixel.Contribution, collision.Pixel.X, collision.Pixel.Y, collision.Pixel.Texture);
-                        collisionQueue.Enqueue(reflectCollision);
+                        foreach (Ray ray in CollisionHelper.GetResultRays(collision))
+                        {
+                            if (Collider.TryGetCollision(ray, out IEnumerable<Collision> rayCollisions))
+                            {
+                                Collision rayCollision = rayCollisions.Min(new CollisionDistanceComparer());
+                                rayCollision.Depth = collision.Depth + 1;
+                                rayCollision.Pixel = new PixelReference((float)collision.Material.Reflectiveness * collision.Pixel.Contribution, collision.Pixel.X, collision.Pixel.Y, collision.Pixel.Texture);
+                                collisionQueue.Enqueue(rayCollision);
+                            }
+                        }
                     }
                 }
                 else
@@ -133,44 +142,6 @@ namespace RayTracer.Scene
             //    maxItems = Math.Max((int)Math.Round(maxItems * (target / timer.ElapsedMilliseconds)), 200);
             //    Console.WriteLine(maxItems);
             //}
-        }
-
-        private void UseColour(Collision collision)
-        {
-            if (collision.Material.Reflectiveness != 1)
-            {
-                Color4 result = Color4.Black;
-                foreach(var light in Scene.Lights.Where(l => Vector3.Dot(l.Position - collision.Position, collision.Normal) > 0))
-                {
-                    var lightposition = light.Position;
-                    var lightdirection = lightposition - collision.Position;
-                    if(Vector3.Dot(lightdirection, collision.Normal) <= 0)
-                    {
-                        continue;
-                    }
-
-                    // test if the light source is obstructed
-                    Ray lightRay = new Ray()
-                    {
-                        Direction = lightposition - collision.Position,
-                        Position = collision.Position
-                    };
-                    if(!Collider.TryGetCollision(lightRay, out var lightCollision) || (lightCollision.Position - collision.Position).LengthSquared > lightdirection.LengthSquared)
-                    {
-                        lightdirection.Normalize();
-                        var effectiveness = Vector3.Dot(lightdirection, collision.Normal);
-
-                        var brightness = light.GetBrightnessAtPosition(collision.Position);
-                        var collisionColour = collision.Material.Colour;
-                        result.R = (float)MathHelper.Clamp(collisionColour.R * brightness * effectiveness * light.Colour.R + result.R, 0, 1);
-                        result.G += (float)MathHelper.Clamp(collisionColour.G * brightness * effectiveness * light.Colour.G + result.G, 0, 1);
-                        result.B += (float)MathHelper.Clamp(collisionColour.B * brightness * effectiveness * light.Colour.B + result.B, 0, 1);
-                    }
-                }
-
-                result.A = (float)(1 - collision.Material.Reflectiveness);
-                collision.Pixel.Use(result);
-            }
         }
     }
 }

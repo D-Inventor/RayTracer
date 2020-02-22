@@ -1,10 +1,5 @@
 ﻿using OpenTK;
 using OpenTK.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RayTracer.Scene.Lights
 {
@@ -13,7 +8,7 @@ namespace RayTracer.Scene.Lights
         protected Matrix4 transform;
         protected double brightness;
 
-        public LightBase(Vector3 position, Quaternion rotation, double brightness, Color4 colour)
+        protected LightBase(Vector3 position, Quaternion rotation, double brightness, Color4 colour)
         {
             this.brightness = brightness;
             Colour = colour;

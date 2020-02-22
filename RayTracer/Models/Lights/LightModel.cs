@@ -1,5 +1,7 @@
 ﻿using Newtonsoft.Json;
+
 using OpenTK.Graphics;
+
 using RayTracer.Json;
 
 namespace RayTracer.Models.Lights
