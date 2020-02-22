@@ -1,16 +1,16 @@
 {
   "WindowSize": {
-    "Width": 1000,
-    "Height": 1000
+    "Width": 700,
+    "Height": 700
   },
   "Scene": {
     "LightSources": [
       {
         "Type": "Point",
         "Position": {
-          "X": 1.0,
+          "X": 3.0,
           "Y": 3.0,
-          "Z": 0.0
+          "Z": 5.0
         },
         "Rotation": {
           "W": 1.0,
@@ -18,7 +18,7 @@
           "Y": 0.0,
           "Z": 0.0
         },
-        "Brightness": 2.0
+        "Brightness": 27.0
       }
     ],
     "Materials": [

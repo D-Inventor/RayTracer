@@ -41,6 +41,7 @@ namespace RayTracer
             GL.Disable(EnableCap.DepthTest);
             GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Nicest);
 
+            scene.Camera.Scene = scene;
             scene.Camera.SetRenderQueue(scene.Camera.GetCollisions());
             scene.Camera.Render();
 

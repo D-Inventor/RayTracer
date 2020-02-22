@@ -19,6 +19,8 @@ namespace RayTracer.Scene.Lights
             transform = Matrix4.CreateFromQuaternion(rotation) * Matrix4.CreateTranslation(position);
         }
 
+        public Vector3 Position => transform.ExtractTranslation();
+
         public abstract double GetBrightnessAtPosition(Vector3 position);
     }
 }
