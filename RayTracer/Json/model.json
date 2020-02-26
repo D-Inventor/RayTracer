@@ -9,8 +9,8 @@
         "Type": "Point",
         "Position": {
           "X": 3.0,
-          "Y": 3.0,
-          "Z": 5.0
+          "Y": 4.0,
+          "Z": 9.0
         },
         "Rotation": {
           "W": 1.0,
@@ -18,7 +18,7 @@
           "Y": 0.0,
           "Z": 0.0
         },
-        "Brightness": 25.0,
+        "Brightness": 15.0,
         "Colour": {
           "R": 1.0,
           "G": 1.0,
@@ -31,7 +31,7 @@
       {
         "Name": "ExampleMaterial",
         "Roughness": 0.7,
-        "Reflectiveness": 0.5,
+        "Reflectiveness": 0.0,
         "Colour": {
           "R": 0.5,
           "G": 0.7,
@@ -45,6 +45,17 @@
         "Reflectiveness": 0.5,
         "Colour": {
           "R": 0.8,
+          "G": 0.5,
+          "B": 0.0,
+          "A": 1.0
+        }
+      },
+      {
+        "Name": "ExampleMaterial3",
+        "Roughness": 0.7,
+        "Reflectiveness": 0.5,
+        "Colour": {
+          "R": 0.1,
           "G": 0.5,
           "B": 0.0,
           "A": 1.0
@@ -107,7 +118,7 @@
         "MaterialName": "ExampleMaterial",
         "Position": {
           "X": 0.0,
-          "Y": 0.0,
+          "Y": 1.0,
           "Z": 10.0
         },
         "Rotation": {
@@ -123,7 +134,7 @@
         "MaterialName": "ExampleMaterial2",
         "Position": {
           "X": -1.0,
-          "Y": 1.0,
+          "Y": 2.0,
           "Z": 8.0
         },
         "Rotation": {
@@ -135,11 +146,11 @@
       },
       {
         "ShapeType": "Plane",
-        "MaterialName": "ExampleMaterial",
+        "MaterialName": "ExampleMaterial3",
         "Position": {
-          "X": 1.2,
-          "Y": 2.3,
-          "Z": 4.5
+          "X": 0.0,
+          "Y": 0.0,
+          "Z": 0.0
         },
         "Rotation": {
           "X": 0.0,

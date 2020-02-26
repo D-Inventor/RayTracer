@@ -109,7 +109,7 @@ namespace RayTracer.Scene
                         collision.Pixel.Use(result);
                     }
 
-                    if (collision.Depth < 1)
+                    if (collision.Depth < 4)
                     {
                         foreach (Ray ray in CollisionHelper.GetResultRays(collision))
                         {
