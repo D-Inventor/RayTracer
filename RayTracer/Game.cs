@@ -9,7 +9,12 @@ using System.Threading.Tasks;
 
 namespace RayTracer
 {
-    public class Game
+    public interface IGame
+    {
+        Game UseStartup<T>() where T : class;
+    }
+
+    public class Game : IGame
     {
         private Type startupType;
         private IServiceCollection serviceCollection;
