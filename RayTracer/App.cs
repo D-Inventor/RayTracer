@@ -10,6 +10,7 @@ using RayTracer.Interfaces;
 using RayTracer.Models;
 
 using System;
+using System.Drawing;
 using System.IO;
 
 namespace RayTracer
@@ -22,16 +23,22 @@ namespace RayTracer
         private readonly string texture = "RenderTexture";
         private readonly string shader = "DefaultProgram";
         private readonly IConfigurationRoot configuration;
+        private readonly IServiceProvider services;
 
-        public App(IConfigurationRoot configuration)
+        public App(IConfigurationRoot configuration,
+                   IServiceProvider services)
         {
             this.configuration = configuration;
+            this.services = services;
         }
 
         new public void Run()
         {
             double fps = double.Parse(configuration["fps"]);
             double ups = double.Parse(configuration["ups"]);
+
+            Title = configuration["window:title"];
+            ClientSize = new Size(int.Parse(configuration["window:width"]), int.Parse(configuration["window:height"]));
 
             Run(ups, fps);
         }
@@ -45,9 +52,6 @@ namespace RayTracer
             {
                 client = JsonConvert.DeserializeObject<ClientModel>(sr.ReadToEnd());
             }
-
-            ClientSize = client.WindowSize;
-            Title = "RayTracer";
 
             scene = SceneFactory.CreateScene(client.Scene);
 

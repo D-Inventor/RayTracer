@@ -1,8 +1,4 @@
 {
-  "WindowSize": {
-    "Width": 700,
-    "Height": 700
-  },
   "Scene": {
     "LightSources": [
       {

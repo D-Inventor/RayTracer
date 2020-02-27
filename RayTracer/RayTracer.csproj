@@ -165,7 +165,6 @@
     <Compile Include="Models\Shapes\PlaneModel.cs" />
     <Compile Include="Models\Shapes\ShapeModel.cs" />
     <Compile Include="Models\Shapes\SphereModel.cs" />
-    <Compile Include="Models\SizeModel.cs" />
     <Compile Include="Models\VectorModel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
