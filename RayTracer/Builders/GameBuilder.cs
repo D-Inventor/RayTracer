@@ -12,12 +12,10 @@ namespace RayTracer.Builders
 {
     public class GameBuilder : IBuilder<IGame>
     {
-        private Type startupType;
         private IServiceCollection serviceCollection;
 
         public GameBuilder()
         {
-            startupType = null;
             serviceCollection = new ServiceCollection();
         }
 
@@ -26,8 +24,7 @@ namespace RayTracer.Builders
             var configurationBuilder = new ConfigurationBuilder();
             configurationBuilder
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("Appsettings.json")
-                .AddCommandLine(Environment.GetCommandLineArgs());
+                .AddJsonFile("Appsettings.json");
 
             configure?.Invoke(configurationBuilder);
 
@@ -35,16 +32,35 @@ namespace RayTracer.Builders
             return this;
         }
 
-        public GameBuilder AddStartup<T>() where T : class
+        public GameBuilder AddStartup<T>() where T : class, IStartup
         {
-            startupType = typeof(T);
-            serviceCollection.AddSingleton<T>();
+            serviceCollection.AddSingleton<IStartup, T>();
             return this;
         }
 
         public IGame Build()
         {
-            throw new NotImplementedException();
+            var services = BuildGameServices();
+            return new Game(services);
+        }
+
+        private IServiceProvider BuildGameServices()
+        {
+            IServiceProvider configurationServices = serviceCollection.BuildServiceProvider();
+
+
+            IServiceCollection result = new ServiceCollection();
+
+            // add system services
+
+            // add user services
+            var startupTypes = configurationServices.GetServices<IStartup>();
+            foreach(var startup in startupTypes)
+            {
+                startup.ConfigureServices(result);
+            }
+
+            return result.BuildServiceProvider();
         }
     }
 }

@@ -136,6 +136,7 @@
     <Compile Include="Helpers\CollisionHelper.cs" />
     <Compile Include="Interfaces\IBuilder.cs" />
     <Compile Include="Interfaces\ICollider.cs" />
+    <Compile Include="Interfaces\IStartup.cs" />
     <Compile Include="Json\LightConverter.cs" />
     <Compile Include="Json\TextureConverter.cs" />
     <Compile Include="Json\ShapeConverter.cs" />

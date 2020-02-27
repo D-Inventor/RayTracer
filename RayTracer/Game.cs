@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using RayTracer.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,43 +12,23 @@ namespace RayTracer
 {
     public interface IGame
     {
-        Game UseStartup<T>() where T : class;
+        IServiceProvider Services { get; }
+
+        void Run();
     }
 
     public class Game : IGame
     {
-        private Type startupType;
-        private IServiceCollection serviceCollection;
-
-        private Game(string[] args)
+        public Game(IServiceProvider services)
         {
-            startupType = null;
-            serviceCollection = new ServiceCollection();
-
-            AddConfiguration(args);
+            Services = services;
         }
 
-        public Game CreateDefaultGame(string[] args)
+        public void Run()
         {
-            return new Game(args);
+            // run the game here
         }
 
-        public Game UseStartup<T>() where T : class
-        {
-            serviceCollection.AddSingleton<T>();
-            startupType = typeof(T);
-            return this;
-        }
-
-        private void AddConfiguration(string[] args)
-        {
-            serviceCollection.AddSingleton<IConfigurationRoot>(
-                new ConfigurationBuilder()
-                    .SetBasePath(Directory.GetCurrentDirectory())
-                    .AddCommandLine(args)
-                    .AddJsonFile("appsettings.json")
-                    .Build()
-            );
-        }
+        public IServiceProvider Services { get; }
     }
 }
