@@ -1,8 +1,11 @@
-﻿namespace RayTracer
+﻿using Microsoft.Extensions.Configuration;
+using RayTracer.Builders;
+
+namespace RayTracer
 {
     internal class Program
     {
-        private static void Main()
+        private static void Main(string[] args)
         {
             //ClientModel templateClient = new ClientModel
             //{
@@ -68,6 +71,16 @@
             //}
 
             //return;
+
+            var game = new GameBuilder()
+                .AddConfiguration(options =>
+                {
+                    options.AddCommandLine(args);
+                })
+                .AddStartup<Startup>()
+                .Build();
+
+            game.Run();
 
             using (App app = new App())
             {

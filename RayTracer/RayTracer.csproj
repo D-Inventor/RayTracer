@@ -176,9 +176,13 @@
     <Compile Include="Scene\Shapes\Sphere.cs" />
     <Compile Include="Scene\Texture.cs" />
     <Compile Include="Shaders\Shader.cs" />
+    <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Json\model.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

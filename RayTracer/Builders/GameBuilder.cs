@@ -52,6 +52,7 @@ namespace RayTracer.Builders
             IServiceCollection result = new ServiceCollection();
 
             // add system services
+            result.AddSingleton(configurationServices.GetRequiredService<IConfigurationRoot>());
 
             // add user services
             var startupTypes = configurationServices.GetServices<IStartup>();
