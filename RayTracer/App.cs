@@ -1,10 +1,12 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 
 using OpenTK;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Input;
 
 using RayTracer.Factories;
+using RayTracer.Interfaces;
 using RayTracer.Models;
 
 using System;
@@ -12,13 +14,27 @@ using System.IO;
 
 namespace RayTracer
 {
-    internal class App : GameWindow
+    internal class App : GameWindow, IGameRunner
     {
         private Scene.Scene scene;
 
         private readonly string mesh = "RenderMesh";
         private readonly string texture = "RenderTexture";
         private readonly string shader = "DefaultProgram";
+        private readonly IConfigurationRoot configuration;
+
+        public App(IConfigurationRoot configuration)
+        {
+            this.configuration = configuration;
+        }
+
+        new public void Run()
+        {
+            double fps = double.Parse(configuration["fps"]);
+            double ups = double.Parse(configuration["ups"]);
+
+            Run(ups, fps);
+        }
 
         protected override void OnLoad(EventArgs e)
         {

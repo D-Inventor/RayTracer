@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace RayTracer
 {
-    public interface IGame
+    public interface IGame: IDisposable
     {
         IServiceProvider Services { get; }
 
@@ -26,9 +26,40 @@ namespace RayTracer
 
         public void Run()
         {
-            // run the game here
+            Services.GetRequiredService<IGameRunner>().Run();
         }
 
         public IServiceProvider Services { get; }
+
+        #region IDisposable Support
+        private bool disposedValue = false; // To detect redundant calls
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if(Services is IDisposable disposableServices)
+                {
+                    disposableServices.Dispose();
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        ~Game()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(false);
+        }
+
+        // This code added to correctly implement the disposable pattern.
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        #endregion
     }
 }

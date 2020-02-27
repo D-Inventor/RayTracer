@@ -53,6 +53,8 @@ namespace RayTracer.Builders
 
             // add system services
             result.AddSingleton(configurationServices.GetRequiredService<IConfigurationRoot>());
+            result.AddSingleton<IGameRunner, App>();
+
 
             // add user services
             var startupTypes = configurationServices.GetServices<IStartup>();

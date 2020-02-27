@@ -81,11 +81,6 @@ namespace RayTracer
                 .Build();
 
             game.Run();
-
-            using (App app = new App())
-            {
-                app.Run(30.0, 0.0);
-            }
         }
     }
 }
