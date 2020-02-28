@@ -1,5 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Console;
+using Microsoft.Extensions.Options;
 using RayTracer.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -52,8 +55,18 @@ namespace RayTracer.Builders
             IServiceCollection result = new ServiceCollection();
 
             // add system services
-            result.AddSingleton(configurationServices.GetRequiredService<IConfigurationRoot>());
+            var configuration = configurationServices.GetRequiredService<IConfigurationRoot>();
+            result.AddOptions();
+            result.AddSingleton(configuration);
             result.AddSingleton<IGameRunner, App>();
+            result.AddLogging(builder =>
+            {
+                builder.AddConsole(configure =>
+                {
+                    configure.Format = ConsoleLoggerFormat.Systemd;
+                })
+                .AddConfiguration(configuration);
+            });
 
 
             // add user services

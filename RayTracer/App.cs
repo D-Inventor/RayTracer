@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 using OpenTK;
@@ -23,12 +24,15 @@ namespace RayTracer
         private readonly string texture = "RenderTexture";
         private readonly string shader = "DefaultProgram";
         private readonly IConfigurationRoot configuration;
+        private readonly ILogger<App> logger;
         private readonly IServiceProvider services;
 
         public App(IConfigurationRoot configuration,
+                   ILogger<App> logger,
                    IServiceProvider services)
         {
             this.configuration = configuration;
+            this.logger = logger;
             this.services = services;
         }
 
@@ -63,14 +67,16 @@ namespace RayTracer
             base.OnLoad(e);
         }
 
-        private static void LogDeviceInformation()
+        private void LogDeviceInformation()
         {
             string OpenGLContext = GL.GetString(StringName.Vendor);
             string graphicsCard = GL.GetString(StringName.Renderer);
             string version = GL.GetString(StringName.Version);
             string slversion = GL.GetString(StringName.ShadingLanguageVersion);
-            Console.WriteLine($"Using '{graphicsCard}' from '{OpenGLContext}' version '{version}'");
-            Console.WriteLine($"Supports shader language version {slversion}");
+            logger.LogInformation($"Using '{graphicsCard}' from '{OpenGLContext}' version '{version}'");
+            logger.LogInformation($"Supports shader language version {slversion}");
+            //Console.WriteLine($"Using '{graphicsCard}' from '{OpenGLContext}' version '{version}'");
+            //Console.WriteLine($"Supports shader language version {slversion}");
         }
 
         protected override void OnUnload(EventArgs e)
