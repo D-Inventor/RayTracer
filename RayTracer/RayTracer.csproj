@@ -159,19 +159,21 @@
     <Compile Include="Factories\TextureFactory.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="Helpers\CollisionHelper.cs" />
+    <Compile Include="Helpers\EnvironmentHelper.cs" />
     <Compile Include="Interfaces\IBuilder.cs" />
     <Compile Include="Interfaces\ICollider.cs" />
     <Compile Include="Interfaces\IGameRunner.cs" />
-    <Compile Include="Interfaces\IStartup.cs" />
     <Compile Include="Json\LightConverter.cs" />
     <Compile Include="Json\TextureConverter.cs" />
     <Compile Include="Json\ShapeConverter.cs" />
     <Compile Include="Models\CameraModel.cs" />
     <Compile Include="Models\ClientModel.cs" />
     <Compile Include="Models\ColorModel.cs" />
+    <Compile Include="Models\Contexts\GameBuilderContext.cs" />
     <Compile Include="Models\Lights\LightModel.cs" />
     <Compile Include="Models\Lights\PointLightModel.cs" />
     <Compile Include="Models\MeshModel.cs" />
+    <Compile Include="Models\Options\EnvironmentOptions.cs" />
     <Compile Include="Models\RayTracer\Collision.cs" />
     <Compile Include="Models\RayTracer\PixelReference.cs" />
     <Compile Include="Models\RayTracer\Ray.cs" />
@@ -201,11 +203,16 @@
     <Compile Include="Scene\Shapes\Sphere.cs" />
     <Compile Include="Scene\Texture.cs" />
     <Compile Include="Shaders\Shader.cs" />
-    <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Appsettings.Debug.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Environment.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Json\model.json">

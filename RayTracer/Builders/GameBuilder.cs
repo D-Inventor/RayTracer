@@ -1,82 +1,60 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Console;
-using Microsoft.Extensions.Options;
+using RayTracer.Helpers;
 using RayTracer.Interfaces;
+using RayTracer.Models.Options;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RayTracer.Builders
 {
     public class GameBuilder : IBuilder<IGame>
     {
-        private IServiceCollection serviceCollection;
-
-        public GameBuilder()
-        {
-            serviceCollection = new ServiceCollection();
-        }
-
-        public GameBuilder AddConfiguration(Action<IConfigurationBuilder> configure = null)
-        {
-            var configurationBuilder = new ConfigurationBuilder();
-            configurationBuilder
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("Appsettings.json");
-
-            configure?.Invoke(configurationBuilder);
-
-            serviceCollection.AddSingleton<IConfigurationRoot>(configurationBuilder.Build());
-            return this;
-        }
-
-        public GameBuilder AddStartup<T>() where T : class, IStartup
-        {
-            serviceCollection.AddSingleton<IStartup, T>();
-            return this;
-        }
-
         public IGame Build()
         {
-            var services = BuildGameServices();
+            IEnvironmentHelper environmentHelper = GetEnvironmentHelper();
+            IConfigurationRoot configuration = GetConfiguration(environmentHelper);
+            IServiceProvider services = ConfigureServices(environmentHelper, configuration);
+
             return new Game(services);
         }
 
-        private IServiceProvider BuildGameServices()
+        private IConfigurationRoot GetConfiguration(IEnvironmentHelper environmentHelper)
         {
-            IServiceProvider configurationServices = serviceCollection.BuildServiceProvider();
+            return new ConfigurationBuilder()
+                .SetBasePath(environmentHelper.ConfigurationPath)
+                .AddJsonFile("Appsettings.json", false)
+                .AddJsonFile($"Appsettings.{environmentHelper.Environment}.json")
+                .AddCommandLine(Environment.GetCommandLineArgs())
+                .Build();
+        }
+
+        private IServiceProvider ConfigureServices(IEnvironmentHelper environmentHelper, IConfigurationRoot configuration)
+        {
+            var serviceCollection = new ServiceCollection();
+            serviceCollection.AddSingleton(environmentHelper);
+            serviceCollection.AddSingleton(configuration);
 
 
-            IServiceCollection result = new ServiceCollection();
 
-            // add system services
-            var configuration = configurationServices.GetRequiredService<IConfigurationRoot>();
-            result.AddOptions();
-            result.AddSingleton(configuration);
-            result.AddSingleton<IGameRunner, App>();
-            result.AddLogging(builder =>
+            return serviceCollection.BuildServiceProvider(new ServiceProviderOptions
             {
-                builder.AddConsole(configure =>
-                {
-                    configure.Format = ConsoleLoggerFormat.Systemd;
-                })
-                .AddConfiguration(configuration);
+                ValidateOnBuild = true,
+                ValidateScopes = true
             });
+        }
 
+        private IEnvironmentHelper GetEnvironmentHelper()
+        {
+            IConfigurationRoot configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("Environment.json")
+                .Build();
 
-            // add user services
-            var startupTypes = configurationServices.GetServices<IStartup>();
-            foreach(var startup in startupTypes)
-            {
-                startup.ConfigureServices(result);
-            }
+            EnvironmentOptions options = new EnvironmentOptions();
+            configuration.Bind(options);
 
-            return result.BuildServiceProvider();
+            return new EnvironmentHelper(options);
         }
     }
 }

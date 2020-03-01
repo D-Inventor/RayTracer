@@ -72,13 +72,7 @@ namespace RayTracer
 
             //return;
 
-            var game = new GameBuilder()
-                .AddConfiguration(options =>
-                {
-                    options.AddCommandLine(args);
-                })
-                .AddStartup<Startup>()
-                .Build();
+            var game = new GameBuilder().Build();
 
             game.Run();
         }
