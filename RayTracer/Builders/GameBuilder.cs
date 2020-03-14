@@ -1,60 +1,59 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Autofac;
+
+using Microsoft.Extensions.Configuration;
+using RayTracer.Extensions;
 using RayTracer.Helpers;
 using RayTracer.Interfaces;
 using RayTracer.Models.Options;
+
 using System;
-using System.IO;
 
 namespace RayTracer.Builders
 {
     public class GameBuilder : IBuilder<IGame>
     {
+        public GameBuilder()
+        { }
+
+        public GameBuilder(EnvironmentOptions options)
+        {
+            EnvironmentHelper = new EnvironmentHelper(options);
+        }
+
+        public IEnvironmentHelper EnvironmentHelper { get; set; }
+        private IConfigurationRoot Configuration { get; set; }
+
         public IGame Build()
         {
-            IEnvironmentHelper environmentHelper = GetEnvironmentHelper();
-            IConfigurationRoot configuration = GetConfiguration(environmentHelper);
-            IServiceProvider services = ConfigureServices(environmentHelper, configuration);
+            ContainerBuilder builder = new ContainerBuilder();
 
-            return new Game(services);
+            AddConfiguration(builder);
+
+            builder.AddLogging((pipeline, context) =>
+            {
+                pipeline
+                .AddLogFilter(Models.Severity.Info)
+                .AddLogFormatter()
+                .AddConsole();
+            });
+
+            builder.RegisterType<App>().As<IGameRunner>().SingleInstance();
+
+            return new Game(builder.Build());
         }
 
-        private IConfigurationRoot GetConfiguration(IEnvironmentHelper environmentHelper)
+        private void AddConfiguration(ContainerBuilder builder)
         {
-            return new ConfigurationBuilder()
-                .SetBasePath(environmentHelper.ConfigurationPath)
+            Configuration = new ConfigurationBuilder()
+                .AddEnvironmentVariables()
+                .SetBasePath(EnvironmentHelper.ConfigurationPath)
                 .AddJsonFile("Appsettings.json", false)
-                .AddJsonFile($"Appsettings.{environmentHelper.Environment}.json")
+                .AddJsonFile($"Appsettings.{EnvironmentHelper.Environment}.json")
                 .AddCommandLine(Environment.GetCommandLineArgs())
                 .Build();
-        }
 
-        private IServiceProvider ConfigureServices(IEnvironmentHelper environmentHelper, IConfigurationRoot configuration)
-        {
-            var serviceCollection = new ServiceCollection();
-            serviceCollection.AddSingleton(environmentHelper);
-            serviceCollection.AddSingleton(configuration);
-
-
-
-            return serviceCollection.BuildServiceProvider(new ServiceProviderOptions
-            {
-                ValidateOnBuild = true,
-                ValidateScopes = true
-            });
-        }
-
-        private IEnvironmentHelper GetEnvironmentHelper()
-        {
-            IConfigurationRoot configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("Environment.json")
-                .Build();
-
-            EnvironmentOptions options = new EnvironmentOptions();
-            configuration.Bind(options);
-
-            return new EnvironmentHelper(options);
+            builder.RegisterInstance(Configuration)
+                .SingleInstance();
         }
     }
 }

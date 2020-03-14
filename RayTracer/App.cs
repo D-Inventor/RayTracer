@@ -1,13 +1,14 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
+
 using Newtonsoft.Json;
 
 using OpenTK;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Input;
-
+using RayTracer.Extensions;
 using RayTracer.Factories;
 using RayTracer.Interfaces;
+using RayTracer.Logging;
 using RayTracer.Models;
 
 using System;
@@ -24,19 +25,15 @@ namespace RayTracer
         private readonly string texture = "RenderTexture";
         private readonly string shader = "DefaultProgram";
         private readonly IConfigurationRoot configuration;
-        private readonly ILogger<App> logger;
-        private readonly IServiceProvider services;
+        private readonly ILogger logger;
 
-        public App(IConfigurationRoot configuration,
-                   ILogger<App> logger,
-                   IServiceProvider services)
+        public App(IConfigurationRoot configuration, ILogger logger)
         {
             this.configuration = configuration;
             this.logger = logger;
-            this.services = services;
         }
 
-        new public void Run()
+        public new void Run()
         {
             double fps = double.Parse(configuration["fps"]);
             double ups = double.Parse(configuration["ups"]);
@@ -73,10 +70,8 @@ namespace RayTracer
             string graphicsCard = GL.GetString(StringName.Renderer);
             string version = GL.GetString(StringName.Version);
             string slversion = GL.GetString(StringName.ShadingLanguageVersion);
-            logger.LogInformation($"Using '{graphicsCard}' from '{OpenGLContext}' version '{version}'");
-            logger.LogInformation($"Supports shader language version {slversion}");
-            //Console.WriteLine($"Using '{graphicsCard}' from '{OpenGLContext}' version '{version}'");
-            //Console.WriteLine($"Supports shader language version {slversion}");
+            logger.LogInfo($"Using '{graphicsCard}' from '{OpenGLContext}' version '{version}'");
+            logger.LogInfo($"Supports shader language version {slversion}");
         }
 
         protected override void OnUnload(EventArgs e)

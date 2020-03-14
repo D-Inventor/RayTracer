@@ -1,5 +1,5 @@
-﻿using Microsoft.Extensions.Options;
-using RayTracer.Models.Options;
+﻿using RayTracer.Models.Options;
+
 using System;
 using System.IO;
 

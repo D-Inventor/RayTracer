@@ -1,35 +1,32 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Autofac;
 using RayTracer.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RayTracer
 {
-    public interface IGame: IDisposable
+    public interface IGame : IDisposable
     {
-        IServiceProvider Services { get; }
+        IContainer Services { get; }
 
         void Run();
     }
 
     public class Game : IGame
     {
-        public Game(IServiceProvider services)
+        public Game(IContainer services)
         {
             Services = services;
         }
 
         public void Run()
         {
-            Services.GetRequiredService<IGameRunner>().Run();
+            using (var scope = Services.BeginLifetimeScope())
+            {
+                scope.Resolve<IGameRunner>().Run();
+            }
         }
 
-        public IServiceProvider Services { get; }
+        public IContainer Services { get; }
 
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
@@ -38,10 +35,7 @@ namespace RayTracer
         {
             if (!disposedValue)
             {
-                if(Services is IDisposable disposableServices)
-                {
-                    disposableServices.Dispose();
-                }
+                Services.Dispose();
 
                 disposedValue = true;
             }

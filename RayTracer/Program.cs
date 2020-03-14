@@ -1,5 +1,7 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Newtonsoft.Json;
 using RayTracer.Builders;
+using RayTracer.Models.Options;
+using System.IO;
 
 namespace RayTracer
 {
@@ -72,7 +74,13 @@ namespace RayTracer
 
             //return;
 
-            var game = new GameBuilder().Build();
+            EnvironmentOptions options = null;
+            using(StreamReader sr = new StreamReader(Path.Combine(Directory.GetCurrentDirectory(), "Environment.json")))
+            {
+                options = JsonConvert.DeserializeObject<EnvironmentOptions>(sr.ReadToEnd());
+            }
+
+            IGame game = new GameBuilder(options).Build();
 
             game.Run();
         }

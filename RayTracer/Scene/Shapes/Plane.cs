@@ -1,4 +1,5 @@
 ﻿using OpenTK;
+
 using RayTracer.Models.RayTracer;
 
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace RayTracer.Scene.Shapes
             Vector3 position = Transform.ExtractTranslation();
             float d = Vector3.Dot(normal, position);
 
-            if(Vector3.Dot(ray.Direction, normal) == 0)
+            if (Vector3.Dot(ray.Direction, normal) == 0)
             {
                 collision = Enumerable.Empty<Collision>();
                 return false;
@@ -22,7 +23,7 @@ namespace RayTracer.Scene.Shapes
 
             float s = (-Vector3.Dot(ray.Position, normal) + d) / (Vector3.Dot(ray.Direction, normal));
 
-            if(s < 0.001)
+            if (s < 0.001)
             {
                 collision = Enumerable.Empty<Collision>();
                 return false;
