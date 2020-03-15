@@ -1,8 +1,9 @@
 ﻿using OpenTK;
 using OpenTK.Graphics.OpenGL4;
-
+using RayTracer.Extensions;
 using RayTracer.Helpers;
 using RayTracer.Interfaces;
+using RayTracer.Logging;
 using RayTracer.Models;
 using RayTracer.Models.Shapes;
 using RayTracer.Models.Textures;
@@ -18,9 +19,25 @@ using System.Linq;
 
 namespace RayTracer.Factories
 {
-    public static class SceneFactory
+    public interface ISceneFactory
     {
-        public static Scene.Scene CreateScene(SceneModel model)
+        Scene.Scene CreateScene(SceneModel model);
+    }
+
+    public class SceneFactory : ISceneFactory
+    {
+        private readonly IMeshFactory meshFactory;
+        private readonly ITextureFactory textureFactory;
+        private readonly ILogger<SceneFactory> logger;
+
+        public SceneFactory(IMeshFactory meshFactory, ITextureFactory textureFactory, ILogger<SceneFactory> logger)
+        {
+            this.meshFactory = meshFactory;
+            this.textureFactory = textureFactory;
+            this.logger = logger;
+        }
+
+        public Scene.Scene CreateScene(SceneModel model)
         {
             IDictionary<string, Texture> textures = CreateTextures(model);
             IDictionary<string, Material> materials = CreateMaterials(model);
@@ -48,10 +65,10 @@ namespace RayTracer.Factories
             return result;
         }
 
-        private static ICollection<LightBase> CreateLights(SceneModel model)
+        private ICollection<LightBase> CreateLights(SceneModel model)
         {
             List<LightBase> result = new List<LightBase>();
-            Console.WriteLine("Creating lights");
+            logger.LogDebug("Creating lights");
             foreach (Models.Lights.LightModel light in model.LightSources)
             {
                 switch (light.Type)
@@ -60,7 +77,7 @@ namespace RayTracer.Factories
                         result.Add(new PointLight(light.Position, light.Rotation, light.Brightness, light.Colour));
                         break;
                     default:
-                        Console.WriteLine($"No conversion is available for a light of type '{light.Type}'");
+                        logger.LogDebug($"No conversion is available for a light of type '{light.Type}'");
                         break;
                 }
             }
@@ -68,55 +85,55 @@ namespace RayTracer.Factories
             return result;
         }
 
-        private static Camera CreateCamera(SceneModel model, IDictionary<string, Texture> textures, IDictionary<string, Material> materials)
+        private Camera CreateCamera(SceneModel model, IDictionary<string, Texture> textures, IDictionary<string, Material> materials)
         {
-            Console.WriteLine("Creating camera...");
+            logger.LogDebug("Creating camera...");
             CameraModel cameraModel = model.Camera;
             if (!textures.ContainsKey(cameraModel.TextureTarget))
             {
-                Console.WriteLine("Unable to create the camera, because the target texture doesn't exist.");
+                logger.LogDebug("Unable to create the camera, because the target texture doesn't exist.");
                 return null;
             }
 
             if (!materials.ContainsKey(cameraModel.Material))
             {
-                Console.WriteLine($"Unable to create the camera, because the camera material '{cameraModel.Material}' does not exist");
+                logger.LogDebug($"Unable to create the camera, because the camera material '{cameraModel.Material}' does not exist");
                 return null;
             }
 
             return new Camera(cameraModel.Width, cameraModel.Height, cameraModel.ViewDistance, cameraModel.Position, cameraModel.ViewDirection, textures[cameraModel.TextureTarget], materials[cameraModel.Material]);
         }
 
-        private static IDictionary<string, Mesh> CreateMeshes(SceneModel model)
+        private IDictionary<string, Mesh> CreateMeshes(SceneModel model)
         {
             Dictionary<string, Mesh> result = new Dictionary<string, Mesh>();
-            Console.WriteLine($"Creating meshes...");
+            logger.LogDebug($"Creating meshes...");
             foreach (MeshModel meshModel in model.Meshes)
             {
-                Console.WriteLine($"Creating mesh '{meshModel.Name}'");
+                logger.LogDebug($"Creating mesh '{meshModel.Name}'");
                 if (result.ContainsKey(meshModel.Name))
                 {
-                    Console.WriteLine($"A mesh with the name '{meshModel.Name}' already exists. Skipping...");
+                    logger.LogDebug($"A mesh with the name '{meshModel.Name}' already exists. Skipping...");
                     continue;
                 }
 
-                Mesh mesh = MeshFactory.CreateMesh(meshModel.Vertices, meshModel.Elements, meshModel.Parameters);
+                Mesh mesh = meshFactory.CreateMesh(meshModel.Vertices, meshModel.Elements, meshModel.Parameters);
                 result.Add(meshModel.Name, mesh);
             }
 
             return result;
         }
 
-        private static IDictionary<string, Texture> CreateTextures(SceneModel model)
+        private IDictionary<string, Texture> CreateTextures(SceneModel model)
         {
             Dictionary<string, Texture> result = new Dictionary<string, Texture>();
-            Console.WriteLine("Creating textures...");
+            logger.LogDebug("Creating textures...");
             foreach (TextureModel textureModel in model.Textures)
             {
-                Console.WriteLine($"Creating texture '{textureModel.Name}'");
+                logger.LogDebug($"Creating texture '{textureModel.Name}'");
                 if (result.ContainsKey(textureModel.Name))
                 {
-                    Console.WriteLine($"A texture with the name '{textureModel.Name}' already exists. Skipping...");
+                    logger.LogDebug($"A texture with the name '{textureModel.Name}' already exists. Skipping...");
                     continue;
                 }
 
@@ -124,13 +141,13 @@ namespace RayTracer.Factories
                 switch (textureModel)
                 {
                     case ImageTextureModel imageTextureModel:
-                        texture = TextureFactory.CreateTexture(imageTextureModel.Path);
+                        texture = textureFactory.CreateTexture(imageTextureModel.Path);
                         break;
                     case ColourTextureModel colourTextureModel:
-                        texture = TextureFactory.CreateTexture(colourTextureModel.Width, colourTextureModel.Height, colourTextureModel.Colour);
+                        texture = textureFactory.CreateTexture(colourTextureModel.Width, colourTextureModel.Height, colourTextureModel.Colour);
                         break;
                     default:
-                        Console.WriteLine($"Texture '{textureModel.Name}' cannot be created, because no conversion for the given texture model has been defined.");
+                        logger.LogDebug($"Texture '{textureModel.Name}' cannot be created, because no conversion for the given texture model has been defined.");
                         break;
                 }
 
@@ -143,16 +160,16 @@ namespace RayTracer.Factories
             return result;
         }
 
-        private static IDictionary<string, Material> CreateMaterials(SceneModel model)
+        private IDictionary<string, Material> CreateMaterials(SceneModel model)
         {
             Dictionary<string, Material> result = new Dictionary<string, Material>();
-            Console.WriteLine("Creating materials...");
+            logger.LogDebug("Creating materials...");
             foreach (MaterialModel material in model.Materials)
             {
-                Console.WriteLine($"Creating material '{material.Name}'");
+                logger.LogDebug($"Creating material '{material.Name}'");
                 if (result.ContainsKey(material.Name))
                 {
-                    Console.WriteLine($"A material with the name '{material.Name}' already exists. Skipping...");
+                    logger.LogDebug($"A material with the name '{material.Name}' already exists. Skipping...");
                     continue;
                 }
 
@@ -167,11 +184,11 @@ namespace RayTracer.Factories
             return result;
         }
 
-        private static ICollection<ShapeBase> CreateShapes(SceneModel model, IDictionary<string, Material> materials)
+        private ICollection<ShapeBase> CreateShapes(SceneModel model, IDictionary<string, Material> materials)
         {
             List<ShapeBase> shapes = new List<ShapeBase>();
 
-            Console.WriteLine("Creating shapes...");
+            logger.LogDebug("Creating shapes...");
             foreach (ShapeModel shapemodel in model.Shapes)
             {
                 ShapeBase shape;
@@ -192,7 +209,7 @@ namespace RayTracer.Factories
 
                 if (!materials.ContainsKey(shapemodel.MaterialName))
                 {
-                    Console.WriteLine($"No material with the name '{shapemodel.MaterialName}' was found.");
+                    logger.LogDebug($"No material with the name '{shapemodel.MaterialName}' was found.");
                     continue;
                 }
 
@@ -205,31 +222,31 @@ namespace RayTracer.Factories
             return shapes;
         }
 
-        private static IDictionary<string, Shader> CreateShaderPrograms(SceneModel scene)
+        private IDictionary<string, Shader> CreateShaderPrograms(SceneModel scene)
         {
             Dictionary<string, Shader> result = new Dictionary<string, Shader>();
 
             IDictionary<string, CompiledShader> shaders = CreateShaders(scene);
 
-            Console.WriteLine("Creating shader programs...");
+            logger.LogDebug("Creating shader programs...");
             foreach (ShaderProgramModel program in scene.ShaderPrograms)
             {
-                Console.WriteLine($"Creating shader program '{program.Name}'");
+                logger.LogDebug($"Creating shader program '{program.Name}'");
                 if (result.ContainsKey(program.Name))
                 {
-                    Console.WriteLine($"A shader program with the name '{program.Name}' already exists. Skipping...");
+                    logger.LogDebug($"A shader program with the name '{program.Name}' already exists. Skipping...");
                     continue;
                 }
 
                 if (!shaders.TryGetValue(program.VertexShader, out CompiledShader vertexShader) || vertexShader.Type != ShaderType.VertexShader)
                 {
-                    Console.WriteLine($"Could not find the vertexshader for program {program.Name}");
+                    logger.LogDebug($"Could not find the vertexshader for program {program.Name}");
                     continue;
                 }
 
                 if (!shaders.TryGetValue(program.FragmentShader, out CompiledShader fragmentShader) || fragmentShader.Type != ShaderType.FragmentShader)
                 {
-                    Console.WriteLine($"Could not find the fragmentshader for program {program.Name}");
+                    logger.LogDebug($"Could not find the fragmentshader for program {program.Name}");
                     continue;
                 }
 
@@ -248,23 +265,23 @@ namespace RayTracer.Factories
             return result;
         }
 
-        private static IDictionary<string, CompiledShader> CreateShaders(SceneModel scene)
+        private IDictionary<string, CompiledShader> CreateShaders(SceneModel scene)
         {
             Dictionary<string, CompiledShader> result = new Dictionary<string, CompiledShader>();
 
-            Console.WriteLine("Creating shaders...");
+            logger.LogDebug("Creating shaders...");
             foreach (ShaderModel shader in scene.Shaders)
             {
-                Console.WriteLine($"Creating shader '{shader.Name}'...");
+                logger.LogDebug($"Creating shader '{shader.Name}'...");
                 if (result.ContainsKey(shader.Name))
                 {
-                    Console.WriteLine($"Shader '{shader.Name}' has already been defined. Skipping...");
+                    logger.LogDebug($"Shader '{shader.Name}' has already been defined. Skipping...");
                     continue;
                 }
 
                 if (!File.Exists(shader.Source))
                 {
-                    Console.WriteLine($"Could not find file for shader '{shader.Name}'. Skipping...");
+                    logger.LogDebug($"Could not find file for shader '{shader.Name}'. Skipping...");
                     continue;
                 }
 
@@ -278,7 +295,7 @@ namespace RayTracer.Factories
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine($"Attempted to read the source of shader '{shader.Name}', but failed: {e.Message}\n{e.StackTrace}");
+                    logger.LogDebug($"Attempted to read the source of shader '{shader.Name}', but failed: {e.Message}\n{e.StackTrace}");
                     continue;
                 }
 
@@ -288,8 +305,8 @@ namespace RayTracer.Factories
                 string compileMessage = GL.GetShaderInfoLog(shaderPointer);
                 if (!string.IsNullOrEmpty(compileMessage))
                 {
-                    Console.WriteLine($"shader {shader.Name} was not created:");
-                    Console.WriteLine(compileMessage);
+                    logger.LogDebug($"shader {shader.Name} was not created:");
+                    logger.LogDebug(compileMessage);
                     GL.DeleteShader(shaderPointer);
                     continue;
                 }
@@ -304,7 +321,7 @@ namespace RayTracer.Factories
             return result;
         }
 
-        private static void DeleteShaders(IDictionary<string, CompiledShader> shaders)
+        private void DeleteShaders(IDictionary<string, CompiledShader> shaders)
         {
             foreach (KeyValuePair<string, CompiledShader> shader in shaders)
             {

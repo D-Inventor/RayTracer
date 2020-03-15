@@ -1,4 +1,5 @@
-﻿using RayTracer.Models;
+﻿using RayTracer.Logging;
+using RayTracer.Models;
 using RayTracer.Pipeline;
 
 using System;
@@ -41,28 +42,9 @@ namespace RayTracer.Extensions
             });
         }
 
-        public static IPipelineComponent<Log, string> AddLogFormatter<PIn>(this IPipelineComponent<PIn, Log> component)
+        public static IPipelineComponent<Log, string> AddLogFormatter<PIn>(this IPipelineComponent<PIn, Log> component, ILogFormatter formatter)
         {
-            return component.AddStep((log, context) =>
-            {
-                StringBuilder sb = new StringBuilder();
-                sb.Append($"[{log.Time}]");
-                sb.Append($" <{log.Severity.ToString().PadLeft(10)}>");
-
-                foreach(var tag in log.Tags)
-                {
-                    sb.Append($" ({tag})");
-                }
-
-                sb.Append($" {log.Message}");
-
-                if(log.Exception != null)
-                {
-                    sb.Append($"{Environment.NewLine}{log.Exception.Message}{Environment.NewLine}{log.Exception.StackTrace}");
-                }
-
-                return sb.ToString();
-            });
+            return component.AddStep(PipelineComponent.CreatePipeline(formatter));
         }
 
         public static IPipelineComponent<string, string> AddConsole<PIn>(this IPipelineComponent<PIn, string> component)

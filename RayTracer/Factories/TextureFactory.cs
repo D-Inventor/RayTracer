@@ -1,6 +1,7 @@
 ﻿using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
-
+using RayTracer.Extensions;
+using RayTracer.Logging;
 using RayTracer.Scene;
 
 using System;
@@ -9,9 +10,22 @@ using System.Drawing.Imaging;
 
 namespace RayTracer.Factories
 {
-    public static class TextureFactory
+    public interface ITextureFactory
     {
-        public static Texture CreateTexture(string file)
+        Texture CreateTexture(int width, int height, Color4 colour);
+        Texture CreateTexture(string file);
+    }
+
+    public class TextureFactory : ITextureFactory
+    {
+        private readonly ILogger<TextureFactory> logger;
+
+        public TextureFactory(ILogger<TextureFactory> logger)
+        {
+            this.logger = logger;
+        }
+
+        public Texture CreateTexture(string file)
         {
             Bitmap bmp = new Bitmap(file);
             bmp.RotateFlip(RotateFlipType.RotateNoneFlipY);
@@ -38,14 +52,14 @@ namespace RayTracer.Factories
             }
             catch (ArgumentException ex)
             {
-                Console.WriteLine($"Attempted to create a texture, but failed: {ex.Message}\n{ex.StackTrace}");
+                logger.LogWarning(ex, $"Attempted to create a texture, but failed.");
                 GL.DeleteTexture(texturePointer);
 
                 return null;
             }
         }
 
-        public static Texture CreateTexture(int width, int height, Color4 colour)
+        public Texture CreateTexture(int width, int height, Color4 colour)
         {
             int[] pixels = new int[width * height];
 
@@ -69,7 +83,7 @@ namespace RayTracer.Factories
             }
             catch (ArgumentException ex)
             {
-                Console.WriteLine($"Attempted to create a texture, but failed: {ex.Message}\n{ex.StackTrace}");
+                logger.LogWarning(ex, $"Attempted to create a texture, but failed.");
                 GL.DeleteTexture(texturePointer);
 
                 return null;

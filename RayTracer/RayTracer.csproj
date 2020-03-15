@@ -146,7 +146,9 @@
     <Compile Include="Json\LightConverter.cs" />
     <Compile Include="Json\TextureConverter.cs" />
     <Compile Include="Json\ShapeConverter.cs" />
+    <Compile Include="Logging\LogFormatter.cs" />
     <Compile Include="Logging\Logger.cs" />
+    <Compile Include="Models\Options\LogFormatterOptions.cs" />
     <Compile Include="Pipeline\AsyncPipelineComponent.cs" />
     <Compile Include="Pipeline\AsyncPipelineStep.cs" />
     <Compile Include="Pipeline\PipelineComponent.cs" />

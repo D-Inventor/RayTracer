@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Autofac;
+using Autofac.Core;
+using Microsoft.Extensions.Configuration;
 
 using Newtonsoft.Json;
 
@@ -25,11 +27,13 @@ namespace RayTracer
         private readonly string texture = "RenderTexture";
         private readonly string shader = "DefaultProgram";
         private readonly IConfigurationRoot configuration;
-        private readonly ILogger logger;
+        private readonly ILifetimeScope lifetimeScope;
+        private readonly ILogger<App> logger;
 
-        public App(IConfigurationRoot configuration, ILogger logger)
+        public App(IConfigurationRoot configuration, ILifetimeScope lifetimeScope, ILogger<App> logger)
         {
             this.configuration = configuration;
+            this.lifetimeScope = lifetimeScope;
             this.logger = logger;
         }
 
@@ -46,20 +50,25 @@ namespace RayTracer
 
         protected override void OnLoad(EventArgs e)
         {
-            LogDeviceInformation();
-
-            ClientModel client;
-            using (StreamReader sr = new StreamReader(Path.Combine(Directory.GetCurrentDirectory(), "Json", "model.json")))
+            using(var scope = lifetimeScope.BeginLifetimeScope())
             {
-                client = JsonConvert.DeserializeObject<ClientModel>(sr.ReadToEnd());
+                var sceneFactory = scope.Resolve<ISceneFactory>();
+
+                LogDeviceInformation();
+
+                ClientModel client;
+                using (StreamReader sr = new StreamReader(Path.Combine(Directory.GetCurrentDirectory(), "Json", "model.json")))
+                {
+                    client = JsonConvert.DeserializeObject<ClientModel>(sr.ReadToEnd());
+                }
+
+                scene = sceneFactory.CreateScene(client.Scene);
+
+                GL.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+                GL.Enable(EnableCap.Texture2D);
+                GL.Disable(EnableCap.DepthTest);
+                GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Nicest);
             }
-
-            scene = SceneFactory.CreateScene(client.Scene);
-
-            GL.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-            GL.Enable(EnableCap.Texture2D);
-            GL.Disable(EnableCap.DepthTest);
-            GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Nicest);
 
             base.OnLoad(e);
         }

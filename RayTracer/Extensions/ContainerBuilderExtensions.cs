@@ -19,6 +19,10 @@ namespace RayTracer.Extensions
                 return new Logger(pipeline);
             }).As<ILogger>().SingleInstance();
 
+            builder.RegisterGeneric(typeof(Logger<>))
+                .As(typeof(ILogger<>))
+                .InstancePerDependency();
+
             return builder;
         }
     }
