@@ -67,7 +67,7 @@ namespace RayTracer.Helpers
             return result;
         }
 
-        private IEnumerable<Ray> GetReflectionRays(Collision collision)
+        private static IEnumerable<Ray> GetReflectionRays(Collision collision)
         {
             return new List<Ray>
             {

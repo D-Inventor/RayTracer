@@ -1,5 +1,7 @@
 ﻿using Autofac;
+
 using RayTracer.Interfaces;
+
 using System;
 
 namespace RayTracer
@@ -20,7 +22,7 @@ namespace RayTracer
 
         public void Run()
         {
-            using (var scope = Services.BeginLifetimeScope())
+            using (ILifetimeScope scope = Services.BeginLifetimeScope())
             {
                 scope.Resolve<IGameRunner>().Run();
             }

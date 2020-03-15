@@ -1,5 +1,6 @@
 ﻿using OpenTK;
 using OpenTK.Graphics.OpenGL4;
+
 using RayTracer.Extensions;
 using RayTracer.Helpers;
 using RayTracer.Interfaces;

@@ -3,7 +3,6 @@ using RayTracer.Models;
 using RayTracer.Pipeline;
 
 using System;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace RayTracer.Extensions
@@ -34,7 +33,7 @@ namespace RayTracer.Extensions
         {
             return component.AddStep((log, context) =>
             {
-                if(log.Severity < severity)
+                if (log.Severity < severity)
                 {
                     context.Break();
                 }
@@ -44,7 +43,7 @@ namespace RayTracer.Extensions
 
         public static IPipelineComponent<Log, string> AddLogFormatter<PIn>(this IPipelineComponent<PIn, Log> component, ILogFormatter formatter)
         {
-            return component.AddStep(PipelineComponent.CreatePipeline(formatter));
+            return component.AddStep(formatter);
         }
 
         public static IPipelineComponent<string, string> AddConsole<PIn>(this IPipelineComponent<PIn, string> component)

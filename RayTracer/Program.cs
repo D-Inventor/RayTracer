@@ -1,13 +1,15 @@
 ﻿using Newtonsoft.Json;
+
 using RayTracer.Builders;
 using RayTracer.Models.Options;
+
 using System.IO;
 
 namespace RayTracer
 {
     internal class Program
     {
-        private static void Main(string[] args)
+        private static void Main()
         {
             //ClientModel templateClient = new ClientModel
             //{
@@ -75,7 +77,7 @@ namespace RayTracer
             //return;
 
             EnvironmentOptions options = null;
-            using(StreamReader sr = new StreamReader(Path.Combine(Directory.GetCurrentDirectory(), "Environment.json")))
+            using (StreamReader sr = new StreamReader(Path.Combine(Directory.GetCurrentDirectory(), "Environment.json")))
             {
                 options = JsonConvert.DeserializeObject<EnvironmentOptions>(sr.ReadToEnd());
             }

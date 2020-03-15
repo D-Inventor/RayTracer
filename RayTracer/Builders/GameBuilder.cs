@@ -1,6 +1,7 @@
 ﻿using Autofac;
 
 using Microsoft.Extensions.Configuration;
+
 using RayTracer.Extensions;
 using RayTracer.Factories;
 using RayTracer.Helpers;
@@ -34,7 +35,7 @@ namespace RayTracer.Builders
             builder.AddLogging((pipeline, context) =>
             {
                 IConfigurationRoot configuration = context.Resolve<IConfigurationRoot>();
-                var section = configuration.GetSection("Logging");
+                IConfigurationSection section = configuration.GetSection("Logging");
 
                 pipeline
                 .AddLogFilter(Models.Severity.Debug)

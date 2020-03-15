@@ -1,7 +1,9 @@
 ﻿using Autofac;
+
 using RayTracer.Logging;
 using RayTracer.Models;
 using RayTracer.Pipeline;
+
 using System;
 
 namespace RayTracer.Extensions
@@ -12,7 +14,7 @@ namespace RayTracer.Extensions
         {
             builder.Register(context =>
             {
-                var pipeline = PipelineComponent.CreateIdentity<Log>();
+                IPipelineComponent<Log, Log> pipeline = PipelineComponent.CreateIdentity<Log>();
 
                 configure?.Invoke(pipeline, context);
 

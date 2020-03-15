@@ -1,12 +1,12 @@
 ﻿using Microsoft.Extensions.Configuration;
+
 using RayTracer.Models;
 using RayTracer.Models.Options;
 using RayTracer.Pipeline;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RayTracer.Logging
 {

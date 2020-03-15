@@ -1,5 +1,5 @@
 ﻿using Autofac;
-using Autofac.Core;
+
 using Microsoft.Extensions.Configuration;
 
 using Newtonsoft.Json;
@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using OpenTK;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Input;
+
 using RayTracer.Extensions;
 using RayTracer.Factories;
 using RayTracer.Interfaces;
@@ -50,9 +51,9 @@ namespace RayTracer
 
         protected override void OnLoad(EventArgs e)
         {
-            using(var scope = lifetimeScope.BeginLifetimeScope())
+            using (ILifetimeScope scope = lifetimeScope.BeginLifetimeScope())
             {
-                var sceneFactory = scope.Resolve<ISceneFactory>();
+                ISceneFactory sceneFactory = scope.Resolve<ISceneFactory>();
 
                 LogDeviceInformation();
 

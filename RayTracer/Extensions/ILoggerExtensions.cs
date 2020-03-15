@@ -1,5 +1,6 @@
 ﻿using RayTracer.Logging;
 using RayTracer.Models;
+
 using System;
 using System.Collections.Generic;
 
