@@ -4,12 +4,12 @@ using System.Threading.Tasks;
 
 namespace RayTracer.Pipeline
 {
-    public interface IAsyncPipelineInput<Input>
+    public interface IAsyncPipelineInput<in Input>
     {
         Task ExecuteAsync(Input value, IPipelineContext context = default);
     }
 
-    public interface IAsyncPipelineComponent<Input, Output> : IAsyncPipelineInput<Input>, IPipelineOutput<Output>
+    public interface IAsyncPipelineComponent<in Input, out Output> : IAsyncPipelineInput<Input>, IPipelineOutput<Output>
     {
         T AddStep<T>(T pipelineInput) where T : IAsyncPipelineInput<Output>;
     }

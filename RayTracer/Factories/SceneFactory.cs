@@ -42,7 +42,7 @@ namespace RayTracer.Factories
         public Scene.Scene CreateScene(SceneModel model)
         {
             IDictionary<string, Texture> textures = CreateTextures(model);
-            IDictionary<string, Material> materials = CreateMaterials(model);
+            IDictionary<string, Material> materials = CreateMaterials(model, textures);
             ICollection<ShapeBase> shapes = CreateShapes(model, materials);
             ICollection<LightBase> lights = CreateLights(model);
             IDictionary<string, Shader> shaders = CreateShaderPrograms(model);
@@ -162,7 +162,7 @@ namespace RayTracer.Factories
             return result;
         }
 
-        private IDictionary<string, Material> CreateMaterials(SceneModel model)
+        private IDictionary<string, Material> CreateMaterials(SceneModel model, IDictionary<string, Texture> textures)
         {
             Dictionary<string, Material> result = new Dictionary<string, Material>();
             logger.LogDebug("Creating materials...");
@@ -175,11 +175,18 @@ namespace RayTracer.Factories
                     continue;
                 }
 
+                if (string.IsNullOrWhiteSpace(material.Texture) || !textures.ContainsKey(material.Texture))
+                {
+                    logger.LogWarning($"Texture with name '{material.Texture}' does not exist. Skipping...");
+                    continue;
+                }
+
                 result.Add(material.Name, new Material
                 {
                     Colour = material.Colour,
                     Reflectiveness = material.Reflectiveness,
-                    Roughness = material.Roughness
+                    Roughness = material.Roughness,
+                    Texture = textures[material.Texture]
                 });
             }
 

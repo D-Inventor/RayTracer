@@ -65,21 +65,41 @@ namespace RayTracer.Scene
                 {
                     Vector3 position = bottomLeft + x * nextHorizontalPixel + y * nextVerticalPixel;
 
-                    Collision collision = new Collision
+                    foreach(var pc in GetPixelCollisions(position, cameraPosition, nextHorizontalPixel, nextVerticalPixel, x, y))
                     {
-                        Depth = 0,
-                        InDirection = cameraPosition - position,
-                        Normal = position - cameraPosition,
-                        Material = material,
-                        Position = position,
-                        Pixel = new PixelReference(1.0f, x, y, texture)
-                    };
-
-                    result.Enqueue(collision);
+                        result.Enqueue(pc);
+                    }
                 }
             }
 
             return result;
+        }
+
+        public IEnumerable<Collision> GetPixelCollisions(Vector3 pixel, Vector3 cameraPosition, Vector3 nextHorizontal, Vector3 nextVertical, int Xpixel, int Ypixel)
+        {
+            nextHorizontal /= 4;
+            nextVertical /= 4;
+
+            Vector3 topleft = pixel + nextHorizontal * -1.5f + nextVertical * 1.5f;
+            for(int x = 0; x < 4; x++)
+            {
+                for(int y = 0; y < 4; y++)
+                {
+                    if((x + y) % 2 == 0)
+                    {
+                        var position = topleft + x * nextHorizontal + y * nextVertical;
+                        yield return new Collision
+                        {
+                            Depth = 0,
+                            InDirection = cameraPosition - position,
+                            Normal = position - cameraPosition,
+                            Material = material,
+                            Position = position,
+                            Pixel = new PixelReference(0.125f, Xpixel, Ypixel, texture)
+                        };
+                    }
+                }
+            }
         }
 
         public void SetRenderQueue(ConcurrentQueue<Collision> collisions)

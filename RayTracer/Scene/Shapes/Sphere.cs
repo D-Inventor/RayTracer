@@ -1,5 +1,5 @@
 ﻿using OpenTK;
-
+using OpenTK.Graphics;
 using RayTracer.Models.RayTracer;
 
 using System;
@@ -10,6 +10,25 @@ namespace RayTracer.Scene.Shapes
     public class Sphere : ShapeBase
     {
         public double Radius { get; set; }
+
+        public override Color4 GetColourAt(Vector3 position)
+        {
+            position -= Transform.ExtractTranslation();
+            position /= (float)Radius;
+
+            var up = (new Vector4(Vector3.UnitY, 0) * Transform).Xyz;
+            var right = (new Vector4(Vector3.UnitX, 0) * Transform).Xyz;
+            var forward = (new Vector4(Vector3.UnitZ, 0) * Transform).Xyz;
+
+            var equator = Vector3.Cross(Vector3.Cross(up, position), up).Normalized();
+            var ar = Vector3.Dot(right, equator);
+            var af = Vector3.Dot(forward, equator);
+
+            var u = (((1 - ar) * (af < 0 ? -1 : 1)) + 2) * 0.25f;
+            var v = (Vector3.Dot(up, position) + 1) * 0.5f;
+
+            return Material.Texture[u, v];
+        }
 
         public override bool TryGetCollision(Ray ray, out IEnumerable<Collision> collision)
         {
@@ -52,7 +71,8 @@ namespace RayTracer.Scene.Shapes
                         Material = Material,
                         Position = collisionPosition,
                         Normal = collisionPosition - position,
-                        DistanceSqr = (collisionPosition - ray.Position).LengthSquared
+                        DistanceSqr = (collisionPosition - ray.Position).LengthSquared,
+                        Shape = this
                     }
                 };
                 return true;

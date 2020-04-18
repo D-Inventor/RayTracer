@@ -1,7 +1,7 @@
 ﻿using OpenTK;
 
 using RayTracer.Scene;
-
+using RayTracer.Scene.Shapes;
 using System;
 using System.Collections.Generic;
 
@@ -20,6 +20,7 @@ namespace RayTracer.Models.RayTracer
         public int Depth { get; set; }
         public Material Material { get; set; }
         public PixelReference Pixel { get; set; }
+        public ShapeBase Shape { get; set; }
 
         public Vector3 GetReflection() => InDirection - 2 * Vector3.Dot(InDirection, Normal) * Normal;
     }

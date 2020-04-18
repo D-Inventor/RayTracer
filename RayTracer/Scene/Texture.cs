@@ -2,6 +2,7 @@
 using OpenTK.Graphics.OpenGL4;
 
 using System;
+using System.Drawing;
 
 namespace RayTracer.Scene
 {
@@ -27,6 +28,20 @@ namespace RayTracer.Scene
         {
             get => pixels[x + y * Width];
             set => pixels[x + y * Width] = value;
+        }
+
+        public Color4 this[float u, float v]
+        {
+            get
+            {
+                var un = (int)(((u % 1) + 1) % 1 * Width);
+                var vn = (int)(((v % 1) + 1) % 1 * Height);
+
+                var pixel = this[un, vn];
+
+                byte[] bytes = BitConverter.GetBytes(pixel);
+                return new Color4(bytes[2], bytes[1], bytes[0], bytes[3]);
+            }
         }
 
         public void Clear(Color4 colour)

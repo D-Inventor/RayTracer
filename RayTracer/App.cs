@@ -13,7 +13,6 @@ using RayTracer.Factories;
 using RayTracer.Interfaces;
 using RayTracer.Logging;
 using RayTracer.Models.Storage;
-using RayTracer.Models.Contexts;
 using RayTracer.Services;
 using System;
 using System.Drawing;
@@ -23,7 +22,6 @@ namespace RayTracer
 {
     internal class App : GameWindow, IGameRunner
     {
-        private readonly IAppContext context;
         private readonly IRenderService renderService;
         private readonly IConfigurationRoot configuration;
         private readonly ILifetimeScope lifetimeScope;
@@ -34,9 +32,8 @@ namespace RayTracer
         private readonly string texture = "RenderTexture";
         private readonly string shader = "DefaultProgram";
 
-        public App(IAppContext context, IRenderService renderService, IConfigurationRoot configuration, ILifetimeScope lifetimeScope, ILogger<App> logger)
+        public App(IRenderService renderService, IConfigurationRoot configuration, ILifetimeScope lifetimeScope, ILogger<App> logger)
         {
-            this.context = context;
             this.renderService = renderService;
             this.configuration = configuration;
             this.lifetimeScope = lifetimeScope;
@@ -108,15 +105,7 @@ namespace RayTracer
 
         protected override void OnRenderFrame(FrameEventArgs e)
         {
-
-            GL.Clear(ClearBufferMask.ColorBufferBit);
-
-            scene.Shaders[shader].Use();
-            scene.Textures[texture].Use();
-
-            scene.Meshes[mesh].Draw();
-
-            //renderService.RenderScene(context.CurrentScene);
+            renderService.RenderScene(scene);
             Context.SwapBuffers();
             base.OnRenderFrame(e);
         }

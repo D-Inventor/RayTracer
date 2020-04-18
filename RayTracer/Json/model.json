@@ -21,6 +21,27 @@
           "B": 1.0,
           "A": 1.0
         }
+      },
+      {
+        "Type": "Point",
+        "Position": {
+          "X": -1.0,
+          "Y": 6.0,
+          "Z": 9.0
+        },
+        "Rotation": {
+          "W": 1.0,
+          "X": 0.0,
+          "Y": 0.0,
+          "Z": 0.0
+        },
+        "Brightness": 12.0,
+        "Colour": {
+          "R": 1.0,
+          "G": 1.0,
+          "B": 1.0,
+          "A": 1.0
+        }
       }
     ],
     "Materials": [
@@ -33,7 +54,8 @@
           "G": 0.7,
           "B": 1.0,
           "A": 1.0
-        }
+        },
+        "Texture": "EarthTexture"
       },
       {
         "Name": "ExampleMaterial2",
@@ -44,7 +66,8 @@
           "G": 0.5,
           "B": 0.0,
           "A": 1.0
-        }
+        },
+        "Texture": "Texture1"
       },
       {
         "Name": "ExampleMaterial3",
@@ -55,7 +78,8 @@
           "G": 0.5,
           "B": 0.0,
           "A": 1.0
-        }
+        },
+        "Texture": "ImageTexture"
       },
       {
         "Name": "CameraMaterial",
@@ -66,14 +90,20 @@
           "G": 1.0,
           "B": 1.0,
           "A": 1.0
-        }
+        },
+        "Texture": "ImageTexture"
       }
     ],
     "Textures": [
       {
         "TextureType": "Image",
         "Name": "ImageTexture",
-        "Path": "D_InventorNew.png"
+        "Path": "checker.png"
+      },
+      {
+        "TextureType": "Image",
+        "Name": "EarthTexture",
+        "Path": "earth.jpg"
       },
       {
         "TextureType": "Colour",
@@ -83,6 +113,18 @@
         "Colour": {
           "R": 0.0,
           "G": 0.0,
+          "B": 0.0,
+          "A": 1.0
+        }
+      },
+      {
+        "TextureType": "Colour",
+        "Name": "Texture1",
+        "Width": 1,
+        "Height": 1,
+        "Colour": {
+          "R": 0.0,
+          "G": 0.5,
           "B": 0.0,
           "A": 1.0
         }
@@ -110,7 +152,7 @@
     "Shapes": [
       {
         "ShapeType": "Sphere",
-        "Radius": 1,
+        "Radius": 1.0,
         "MaterialName": "ExampleMaterial",
         "Position": {
           "X": 0.0,
@@ -126,11 +168,11 @@
       },
       {
         "ShapeType": "Sphere",
-        "Radius": 1,
+        "Radius": 0.4,
         "MaterialName": "ExampleMaterial2",
         "Position": {
           "X": -1.0,
-          "Y": 2.0,
+          "Y": 5.0,
           "Z": 8.0
         },
         "Rotation": {
@@ -150,9 +192,9 @@
         },
         "Rotation": {
           "X": 0.0,
-          "Y": 0.0,
+          "Y": 0.4794255,
           "Z": 0.0,
-          "W": 1.0
+          "W": 0.8775826
         }
       }
     ],
@@ -183,16 +225,16 @@
           1.0,
           1.0, // top right
           1.0,
-         -1.0,
+          -1.0,
           0.0,
           1.0,
           0.0, // bottom right
-         -1.0,
-         -1.0,
+          -1.0,
+          -1.0,
           0.0,
           0.0,
           0.0, // bottom left
-         -1.0,
+          -1.0,
           1.0,
           0.0,
           0.0,

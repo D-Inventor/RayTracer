@@ -44,10 +44,10 @@ namespace RayTracer.Helpers
                     float effectiveness = Vector3.Dot(lightdirection, collision.Normal);
 
                     double brightness = light.GetBrightnessAtPosition(collision.Position);
-                    Color4 collisionColour = collision.Material.Colour;
+                    Color4 collisionColour = collision.Shape.GetColourAt(collision.Position);
                     result.R = (float)MathHelper.Clamp(collisionColour.R * brightness * effectiveness * light.Colour.R + result.R, 0, 1);
-                    result.G += (float)MathHelper.Clamp(collisionColour.G * brightness * effectiveness * light.Colour.G + result.G, 0, 1);
-                    result.B += (float)MathHelper.Clamp(collisionColour.B * brightness * effectiveness * light.Colour.B + result.B, 0, 1);
+                    result.G = (float)MathHelper.Clamp(collisionColour.G * brightness * effectiveness * light.Colour.G + result.G, 0, 1);
+                    result.B = (float)MathHelper.Clamp(collisionColour.B * brightness * effectiveness * light.Colour.B + result.B, 0, 1);
                 }
             }
 

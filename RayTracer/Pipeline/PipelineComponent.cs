@@ -4,17 +4,17 @@ using System.Threading.Tasks;
 
 namespace RayTracer.Pipeline
 {
-    public interface IPipelineInput<Input>
+    public interface IPipelineInput<in Input>
     {
         void Execute(Input value, IPipelineContext context = default);
     }
 
-    public interface IPipelineOutput<Output>
+    public interface IPipelineOutput<out Output>
     {
         Output GetOutput();
     }
 
-    public interface IPipelineComponent<Input, Output> : IPipelineInput<Input>, IPipelineOutput<Output>
+    public interface IPipelineComponent<in Input, out Output> : IPipelineInput<Input>, IPipelineOutput<Output>
     {
         T AddStep<T>(T pipelineInput) where T : IPipelineInput<Output>;
     }
