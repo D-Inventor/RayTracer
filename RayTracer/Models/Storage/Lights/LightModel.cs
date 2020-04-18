@@ -4,7 +4,7 @@ using OpenTK.Graphics;
 
 using RayTracer.Json;
 
-namespace RayTracer.Models.Lights
+namespace RayTracer.Models.Storage.Lights
 {
     [JsonConverter(typeof(LightConverter))]
     public abstract class LightModel

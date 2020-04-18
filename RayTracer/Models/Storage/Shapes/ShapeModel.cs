@@ -2,7 +2,7 @@
 
 using RayTracer.Json;
 
-namespace RayTracer.Models.Shapes
+namespace RayTracer.Models.Storage.Shapes
 {
     [JsonConverter(typeof(ShapeConverter))]
     public abstract class ShapeModel

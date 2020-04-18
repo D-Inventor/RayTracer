@@ -1,6 +1,6 @@
 ﻿using OpenTK;
 
-namespace RayTracer.Models
+namespace RayTracer.Models.Storage
 {
     public class VectorModel
     {

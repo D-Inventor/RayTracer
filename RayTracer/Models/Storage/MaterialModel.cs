@@ -1,6 +1,6 @@
 ﻿using OpenTK.Graphics;
 
-namespace RayTracer.Models
+namespace RayTracer.Models.Storage
 {
     public class MaterialModel
     {

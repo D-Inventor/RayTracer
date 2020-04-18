@@ -1,4 +1,4 @@
-﻿namespace RayTracer.Models
+﻿namespace RayTracer.Models.Storage
 {
     public class ClientModel
     {

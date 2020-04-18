@@ -12,8 +12,9 @@ using RayTracer.Extensions;
 using RayTracer.Factories;
 using RayTracer.Interfaces;
 using RayTracer.Logging;
-using RayTracer.Models;
-
+using RayTracer.Models.Storage;
+using RayTracer.Models.Contexts;
+using RayTracer.Services;
 using System;
 using System.Drawing;
 using System.IO;
@@ -22,17 +23,21 @@ namespace RayTracer
 {
     internal class App : GameWindow, IGameRunner
     {
-        private Scene.Scene scene;
-
-        private readonly string mesh = "RenderMesh";
-        private readonly string texture = "RenderTexture";
-        private readonly string shader = "DefaultProgram";
+        private readonly IAppContext context;
+        private readonly IRenderService renderService;
         private readonly IConfigurationRoot configuration;
         private readonly ILifetimeScope lifetimeScope;
         private readonly ILogger<App> logger;
 
-        public App(IConfigurationRoot configuration, ILifetimeScope lifetimeScope, ILogger<App> logger)
+        private Scene.Scene scene;
+        private readonly string mesh = "RenderMesh";
+        private readonly string texture = "RenderTexture";
+        private readonly string shader = "DefaultProgram";
+
+        public App(IAppContext context, IRenderService renderService, IConfigurationRoot configuration, ILifetimeScope lifetimeScope, ILogger<App> logger)
         {
+            this.context = context;
+            this.renderService = renderService;
             this.configuration = configuration;
             this.lifetimeScope = lifetimeScope;
             this.logger = logger;
@@ -55,8 +60,6 @@ namespace RayTracer
             {
                 ISceneFactory sceneFactory = scope.Resolve<ISceneFactory>();
 
-                LogDeviceInformation();
-
                 ClientModel client;
                 using (StreamReader sr = new StreamReader(Path.Combine(Directory.GetCurrentDirectory(), "Json", "model.json")))
                 {
@@ -69,19 +72,11 @@ namespace RayTracer
                 GL.Enable(EnableCap.Texture2D);
                 GL.Disable(EnableCap.DepthTest);
                 GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Nicest);
+
+                renderService.Initialise();
             }
 
             base.OnLoad(e);
-        }
-
-        private void LogDeviceInformation()
-        {
-            string OpenGLContext = GL.GetString(StringName.Vendor);
-            string graphicsCard = GL.GetString(StringName.Renderer);
-            string version = GL.GetString(StringName.Version);
-            string slversion = GL.GetString(StringName.ShadingLanguageVersion);
-            logger.LogInfo($"Using '{graphicsCard}' from '{OpenGLContext}' version '{version}'");
-            logger.LogInfo($"Supports shader language version {slversion}");
         }
 
         protected override void OnUnload(EventArgs e)
@@ -107,12 +102,13 @@ namespace RayTracer
 
         protected override void OnResize(EventArgs e)
         {
-            GL.Viewport(0, 0, Width, Height);
+            renderService.Resize(Width, Height);
             base.OnResize(e);
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
         {
+
             GL.Clear(ClearBufferMask.ColorBufferBit);
 
             scene.Shaders[shader].Use();
@@ -120,6 +116,7 @@ namespace RayTracer
 
             scene.Meshes[mesh].Draw();
 
+            //renderService.RenderScene(context.CurrentScene);
             Context.SwapBuffers();
             base.OnRenderFrame(e);
         }

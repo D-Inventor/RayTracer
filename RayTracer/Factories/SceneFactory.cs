@@ -5,9 +5,10 @@ using RayTracer.Extensions;
 using RayTracer.Helpers;
 using RayTracer.Interfaces;
 using RayTracer.Logging;
-using RayTracer.Models;
-using RayTracer.Models.Shapes;
-using RayTracer.Models.Textures;
+using RayTracer.Models.Storage;
+using RayTracer.Models.Storage.Lights;
+using RayTracer.Models.Storage.Shapes;
+using RayTracer.Models.Storage.Textures;
 using RayTracer.Scene;
 using RayTracer.Scene.Lights;
 using RayTracer.Scene.Shapes;
@@ -70,7 +71,7 @@ namespace RayTracer.Factories
         {
             List<LightBase> result = new List<LightBase>();
             logger.LogDebug("Creating lights");
-            foreach (Models.Lights.LightModel light in model.LightSources)
+            foreach (LightModel light in model.LightSources)
             {
                 switch (light.Type)
                 {

@@ -1,8 +1,8 @@
-﻿using RayTracer.Models.Lights;
-using RayTracer.Models.Shapes;
-using RayTracer.Models.Textures;
+﻿using RayTracer.Models.Storage.Lights;
+using RayTracer.Models.Storage.Shapes;
+using RayTracer.Models.Storage.Textures;
 
-namespace RayTracer.Models
+namespace RayTracer.Models.Storage
 {
     public class SceneModel
     {

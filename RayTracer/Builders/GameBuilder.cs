@@ -7,8 +7,9 @@ using RayTracer.Factories;
 using RayTracer.Helpers;
 using RayTracer.Interfaces;
 using RayTracer.Logging;
+using RayTracer.Models.Contexts;
 using RayTracer.Models.Options;
-
+using RayTracer.Services;
 using System;
 
 namespace RayTracer.Builders
@@ -47,6 +48,8 @@ namespace RayTracer.Builders
             builder.RegisterType<SceneFactory>().As<ISceneFactory>().InstancePerLifetimeScope();
             builder.RegisterType<MeshFactory>().As<IMeshFactory>().InstancePerLifetimeScope();
             builder.RegisterType<TextureFactory>().As<ITextureFactory>().InstancePerLifetimeScope();
+            builder.RegisterType<Models.Contexts.AppContext>().As<IAppContext>().SingleInstance();
+            builder.RegisterType<RenderService>().As<IRenderService>().SingleInstance();
 
             return new Game(builder.Build());
         }

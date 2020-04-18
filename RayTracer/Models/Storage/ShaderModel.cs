@@ -3,7 +3,7 @@ using Newtonsoft.Json.Converters;
 
 using OpenTK.Graphics.OpenGL4;
 
-namespace RayTracer.Models
+namespace RayTracer.Models.Storage
 {
     public class ShaderModel
     {

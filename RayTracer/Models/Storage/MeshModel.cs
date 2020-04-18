@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace RayTracer.Models
+namespace RayTracer.Models.Storage
 {
     public class MeshModel
     {

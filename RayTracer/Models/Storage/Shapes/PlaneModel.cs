@@ -1,4 +1,4 @@
-﻿namespace RayTracer.Models.Shapes
+﻿namespace RayTracer.Models.Storage.Shapes
 {
     public class PlaneModel : ShapeModel
     {

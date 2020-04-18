@@ -2,7 +2,7 @@
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 
-using RayTracer.Models.Shapes;
+using RayTracer.Models.Storage.Shapes;
 
 using System;
 

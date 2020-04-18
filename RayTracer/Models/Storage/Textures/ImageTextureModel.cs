@@ -1,4 +1,4 @@
-﻿namespace RayTracer.Models.Textures
+﻿namespace RayTracer.Models.Storage.Textures
 {
     public class ImageTextureModel : TextureModel
     {

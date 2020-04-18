@@ -1,6 +1,6 @@
 ﻿using OpenTK.Graphics;
 
-namespace RayTracer.Models.Textures
+namespace RayTracer.Models.Storage.Textures
 {
     public class ColourTextureModel : TextureModel
     {

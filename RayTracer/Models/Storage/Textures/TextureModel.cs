@@ -2,7 +2,7 @@
 
 using RayTracer.Json;
 
-namespace RayTracer.Models.Textures
+namespace RayTracer.Models.Storage.Textures
 {
     [JsonConverter(typeof(TextureConverter))]
     public abstract class TextureModel
