@@ -17,7 +17,7 @@
         "Brightness": 15.0,
         "Colour": {
           "R": 1.0,
-          "G": 1.0,
+          "G": 0.0,
           "B": 1.0,
           "A": 1.0
         }
@@ -38,15 +38,36 @@
         "Brightness": 12.0,
         "Colour": {
           "R": 1.0,
+          "G": 0.0,
+          "B": 0.0,
+          "A": 1.0
+        }
+      },
+      {
+        "Type": "Point",
+        "Position": {
+          "X": 0.0,
+          "Y": 6.0,
+          "Z": 0.0
+        },
+        "Rotation": {
+          "W": 1.0,
+          "X": 0.0,
+          "Y": 0.0,
+          "Z": 0.0
+        },
+        "Brightness": 8.0,
+        "Colour": {
+          "R": 1.0,
           "G": 1.0,
-          "B": 1.0,
+          "B": 0.0,
           "A": 1.0
         }
       }
     ],
     "Materials": [
       {
-        "Name": "ExampleMaterial",
+        "Name": "EarthMaterial",
         "Roughness": 0.7,
         "Reflectiveness": 0.0,
         "Colour": {
@@ -55,10 +76,10 @@
           "B": 1.0,
           "A": 1.0
         },
-        "Texture": "EarthTexture"
+        "Texture": "TextureEarth"
       },
       {
-        "Name": "ExampleMaterial2",
+        "Name": "GreenSemiReflectiveMaterial",
         "Roughness": 0.7,
         "Reflectiveness": 0.5,
         "Colour": {
@@ -67,7 +88,7 @@
           "B": 0.0,
           "A": 1.0
         },
-        "Texture": "Texture1"
+        "Texture": "TextureGreen"
       },
       {
         "Name": "ExampleMaterial3",
@@ -79,7 +100,7 @@
           "B": 0.0,
           "A": 1.0
         },
-        "Texture": "ImageTexture"
+        "Texture": "TextureChecker"
       },
       {
         "Name": "CameraMaterial",
@@ -91,18 +112,18 @@
           "B": 1.0,
           "A": 1.0
         },
-        "Texture": "ImageTexture"
+        "Texture": "TextureGreen"
       }
     ],
     "Textures": [
       {
         "TextureType": "Image",
-        "Name": "ImageTexture",
+        "Name": "TextureChecker",
         "Path": "checker.png"
       },
       {
         "TextureType": "Image",
-        "Name": "EarthTexture",
+        "Name": "TextureEarth",
         "Path": "earth.jpg"
       },
       {
@@ -119,13 +140,13 @@
       },
       {
         "TextureType": "Colour",
-        "Name": "Texture1",
+        "Name": "TextureGreen",
         "Width": 1,
         "Height": 1,
         "Colour": {
-          "R": 0.0,
+          "R": 0.5,
           "G": 0.5,
-          "B": 0.0,
+          "B": 0.5,
           "A": 1.0
         }
       }
@@ -153,7 +174,7 @@
       {
         "ShapeType": "Sphere",
         "Radius": 1.0,
-        "MaterialName": "ExampleMaterial",
+        "MaterialName": "EarthMaterial",
         "Position": {
           "X": 0.0,
           "Y": 1.0,
@@ -162,17 +183,17 @@
         "Rotation": {
           "X": 0.0,
           "Y": 0.0,
-          "Z": 0.0,
-          "W": 1.0
+          "Z": 0.4794255,
+          "W": 0.8775826
         }
       },
       {
         "ShapeType": "Sphere",
         "Radius": 0.4,
-        "MaterialName": "ExampleMaterial2",
+        "MaterialName": "GreenSemiReflectiveMaterial",
         "Position": {
           "X": -1.0,
-          "Y": 5.0,
+          "Y": 4.0,
           "Z": 8.0
         },
         "Rotation": {

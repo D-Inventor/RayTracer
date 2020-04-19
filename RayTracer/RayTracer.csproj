@@ -140,6 +140,7 @@
     <Compile Include="Game.cs" />
     <Compile Include="Helpers\CollisionHelper.cs" />
     <Compile Include="Helpers\EnvironmentHelper.cs" />
+    <Compile Include="Helpers\PixelRayCalculator.cs" />
     <Compile Include="Interfaces\IBuilder.cs" />
     <Compile Include="Interfaces\ICollider.cs" />
     <Compile Include="Interfaces\IGameRunner.cs" />
@@ -171,6 +172,7 @@
     <Compile Include="Pipeline\PipelineContext.cs" />
     <Compile Include="Pipeline\PipelineStep.cs" />
     <Compile Include="Scene\Camera.cs" />
+    <Compile Include="Scene\Lights\DirectionLight.cs" />
     <Compile Include="Scene\Lights\LightBase.cs" />
     <Compile Include="Scene\Lights\PointLight.cs" />
     <Compile Include="Scene\Material.cs" />

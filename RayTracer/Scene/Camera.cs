@@ -11,6 +11,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RayTracer.Scene
 {
@@ -21,10 +22,11 @@ namespace RayTracer.Scene
         private readonly float width;
         private readonly float height;
         private readonly float viewDistance;
+        private readonly IPixelCollisionCalculator pixelCollisionCalculator;
         private Matrix4 transform;
         private readonly Texture texture;
         private readonly Material material;
-        private int maxItems = 50000;
+        private int maxItems = 500000;
 
         private static Vector3 Up => Vector3.UnitY;
         private static Vector3 Forward => Vector3.UnitZ;
@@ -39,6 +41,7 @@ namespace RayTracer.Scene
             this.material = material;
             float yaw = (float)Math.Atan(viewDirection.X / viewDirection.Z);
             float pitch = (float)Math.Atan(viewDirection.Y / viewDirection.Z);
+            pixelCollisionCalculator = new PixelCollisionCalculatorAA8();
 
             transform = Matrix4.CreateTranslation(position) *
                         Matrix4.CreateFromQuaternion(Quaternion.FromEulerAngles(pitch, yaw, 0));
@@ -65,7 +68,7 @@ namespace RayTracer.Scene
                 {
                     Vector3 position = bottomLeft + x * nextHorizontalPixel + y * nextVerticalPixel;
 
-                    foreach(var pc in GetPixelCollisions(position, cameraPosition, nextHorizontalPixel, nextVerticalPixel, x, y))
+                    foreach(var pc in pixelCollisionCalculator.GetInitialCollisions(nextHorizontalPixel, nextVerticalPixel, position, cameraPosition, x, y, material, texture))
                     {
                         result.Enqueue(pc);
                     }
@@ -73,33 +76,6 @@ namespace RayTracer.Scene
             }
 
             return result;
-        }
-
-        public IEnumerable<Collision> GetPixelCollisions(Vector3 pixel, Vector3 cameraPosition, Vector3 nextHorizontal, Vector3 nextVertical, int Xpixel, int Ypixel)
-        {
-            nextHorizontal /= 4;
-            nextVertical /= 4;
-
-            Vector3 topleft = pixel + nextHorizontal * -1.5f + nextVertical * 1.5f;
-            for(int x = 0; x < 4; x++)
-            {
-                for(int y = 0; y < 4; y++)
-                {
-                    if((x + y) % 2 == 0)
-                    {
-                        var position = topleft + x * nextHorizontal + y * nextVertical;
-                        yield return new Collision
-                        {
-                            Depth = 0,
-                            InDirection = cameraPosition - position,
-                            Normal = position - cameraPosition,
-                            Material = material,
-                            Position = position,
-                            Pixel = new PixelReference(0.125f, Xpixel, Ypixel, texture)
-                        };
-                    }
-                }
-            }
         }
 
         public void SetRenderQueue(ConcurrentQueue<Collision> collisions)
@@ -113,12 +89,8 @@ namespace RayTracer.Scene
         public void Render()
         {
             bool setChanges = !collisionQueue.IsEmpty;
-            bool improveTiming = setChanges;
 
-            Stopwatch timer = new Stopwatch();
-            timer.Start();
-            //Parallel.For(0, maxItems, (index) =>
-            for (int index = 0; index < maxItems; index++)
+            Parallel.For(0, maxItems, (index) =>
             {
                 if (collisionQueue.TryDequeue(out Collision collision))
                 {
@@ -143,25 +115,12 @@ namespace RayTracer.Scene
                         }
                     }
                 }
-                else
-                {
-                    improveTiming = false;
-                }
-                //});
-            }
-            timer.Stop();
+            });
 
             if (setChanges)
             {
                 texture.SetChanges();
             }
-
-            //if (improveTiming)
-            //{
-            //    var target = (1000f / 80f);
-            //    maxItems = Math.Max((int)Math.Round(maxItems * (target / timer.ElapsedMilliseconds)), 200);
-            //    Console.WriteLine(maxItems);
-            //}
         }
     }
 }
