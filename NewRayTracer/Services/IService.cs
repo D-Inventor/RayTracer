@@ -1,0 +1,10 @@
+﻿using System.Threading;
+using System.Threading.Tasks;
+
+namespace NewRayTracer.Services
+{
+    public interface IService
+    {
+        Task ExecuteAsync(CancellationToken stopEvent);
+    }
+}

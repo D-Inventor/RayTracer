@@ -7,6 +7,7 @@ namespace NewRayTracer.Models.Configuration
     public class GameEnvironment : IGameEnvironment
     {
         public string Environent { get; }
+        public string ConfigDirectory { get; }
 
         #region Singleton implementation
         private static readonly Lazy<GameEnvironment> _lazyGameEnvironment = new Lazy<GameEnvironment>(() => Create());
@@ -14,6 +15,7 @@ namespace NewRayTracer.Models.Configuration
         private GameEnvironment(EnvironmentJsonModel model)
         {
             Environent = model.Environment;
+            ConfigDirectory = !string.IsNullOrWhiteSpace(model.ConfigDirectory) ? model.ConfigDirectory : Directory.GetCurrentDirectory();
         }
 
         private static GameEnvironment Create()
@@ -24,9 +26,11 @@ namespace NewRayTracer.Models.Configuration
 
         public static IGameEnvironment Instance => _lazyGameEnvironment.Value;
 
+
         private class EnvironmentJsonModel
         {
             public string Environment { get; set; }
+            public string ConfigDirectory { get; set; }
         }
         #endregion
     }
