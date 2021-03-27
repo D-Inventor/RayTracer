@@ -172,7 +172,6 @@
     <Compile Include="Pipeline\PipelineContext.cs" />
     <Compile Include="Pipeline\PipelineStep.cs" />
     <Compile Include="Scene\Camera.cs" />
-    <Compile Include="Scene\Lights\DirectionLight.cs" />
     <Compile Include="Scene\Lights\LightBase.cs" />
     <Compile Include="Scene\Lights\PointLight.cs" />
     <Compile Include="Scene\Material.cs" />
