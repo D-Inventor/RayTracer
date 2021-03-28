@@ -1,9 +1,12 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Autofac;
+
+using Microsoft.Extensions.Configuration;
 
 using NewRayTracer.Composing;
 using NewRayTracer.Models.Collections;
 using NewRayTracer.Models.Composition;
 using NewRayTracer.Models.Configuration;
+using NewRayTracer.Services;
 
 using System.Linq;
 
@@ -32,20 +35,27 @@ namespace NewRayTracer.Builders
             BatchedCollectionBuilder<IComposer> composition = AddComposition();
             composition.Add(new RaytraceComposer()).After<TestComposer>();
             composition.Add(new TestComposer());
+            composition.Add(new EventComposer());
+            composition.Add(new SystemComposer());
 
             return this;
         }
 
-        public void Build()
+        public Game Build()
         {
             IConfigurationRoot configuration = _configurationBuilder.Build();
             BatchedCollection<IComposer> compositionCollection = _compositionBuilder.Build();
 
-            CompositionContext context = new CompositionContext();
+            ContainerBuilder containerBuilder = new ContainerBuilder();
+
+            CompositionContext context = new CompositionContext(containerBuilder, GameEnvironment.Instance, configuration);
             foreach(IComposer c in compositionCollection.SelectMany(c => c))
             {
                 c.Compose(context);
             }
+
+            var container = containerBuilder.Build();
+            return new Game(container);
         }
     }
 }

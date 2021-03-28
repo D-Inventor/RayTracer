@@ -1,17 +1,15 @@
 ﻿using Autofac;
 
 using NewRayTracer.Models.Composition;
-using NewRayTracer.Services;
-
-using System;
+using NewRayTracer.Services.Events;
 
 namespace NewRayTracer.Composing
 {
-    public class RaytraceComposer : IComposer
+    public class EventComposer : IComposer
     {
         public void Compose(CompositionContext context)
         {
-            Console.WriteLine("Raytrace composer");
+            context.Container.RegisterGeneric(typeof(EventPublisher<>)).As(typeof(IEventPublisher<>));
         }
     }
 }

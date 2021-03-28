@@ -24,7 +24,7 @@ namespace NewRayTracer.Models.Configuration
                 return new GameEnvironment(JsonSerializer.Deserialize<EnvironmentJsonModel>(sr.ReadToEnd()));
         }
 
-        public static IGameEnvironment Instance => _lazyGameEnvironment.Value;
+        public static GameEnvironment Instance => _lazyGameEnvironment.Value;
 
 
         private class EnvironmentJsonModel

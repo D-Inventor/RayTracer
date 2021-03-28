@@ -11,7 +11,12 @@ namespace NewRayTracer
         {
             GameBuilder gameBuilder = new GameBuilder()
                 .CreateDefault();
-            gameBuilder.Build();
+            
+            var game = gameBuilder.Build();
+
+            await game.Run();
+            await game.DisposeAsync();
+
             Console.ReadKey();
         }
     }

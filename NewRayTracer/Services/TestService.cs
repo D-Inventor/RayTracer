@@ -1,15 +1,27 @@
-﻿using System;
-using System.Threading;
+﻿using NewRayTracer.Models.Events;
+using NewRayTracer.Services.Events;
+
+using System;
 using System.Threading.Tasks;
 
 namespace NewRayTracer.Services
 {
     public class TestService : IService
     {
-        public Task ExecuteAsync(CancellationToken stopEvent)
+        private readonly IEventPublisher<TestEvent> _testEventPublisher;
+
+        public TestService(IEventPublisher<TestEvent> TestEventPublisher)
         {
-            Console.WriteLine("Test!");
-            return Task.CompletedTask;
+            _testEventPublisher = TestEventPublisher;
+        }
+
+        public Task ExecuteAsync()
+        {
+            Console.WriteLine("Running test service...");
+            return _testEventPublisher.Publish(new TestEvent
+            {
+                Message = "This is a test event!"
+            });
         }
     }
 }

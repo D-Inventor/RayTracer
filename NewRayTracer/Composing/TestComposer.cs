@@ -1,4 +1,9 @@
-﻿using NewRayTracer.Models.Composition;
+﻿using Autofac;
+
+using NewRayTracer.Models.Composition;
+using NewRayTracer.Models.Events;
+using NewRayTracer.Services;
+using NewRayTracer.Services.Events;
 
 using System;
 
@@ -9,6 +14,12 @@ namespace NewRayTracer.Composing
         public void Compose(CompositionContext context)
         {
             Console.WriteLine("Test composer!");
+            context.Container.RegisterType<TestService>()
+                             .As<IService>()
+                             .InstancePerDependency();
+            context.Container.RegisterType<TestEventSubscriber>()
+                             .As<IEventSubscriber<TestEvent>>()
+                             .InstancePerDependency();
         }
     }
 }

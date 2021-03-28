@@ -5,6 +5,6 @@ namespace NewRayTracer.Services
 {
     public interface IService
     {
-        Task ExecuteAsync(CancellationToken stopEvent);
+        Task ExecuteAsync();
     }
 }

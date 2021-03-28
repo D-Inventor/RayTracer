@@ -135,18 +135,23 @@
   <ItemGroup>
     <Compile Include="Builders\BatchedCollectionBuilder.cs" />
     <Compile Include="Builders\GameBuilder.cs" />
+    <Compile Include="Composing\EventComposer.cs" />
     <Compile Include="Composing\IComposer.cs" />
     <Compile Include="Composing\RaytraceComposer.cs" />
+    <Compile Include="Composing\SystemComposer.cs" />
     <Compile Include="Composing\TestComposer.cs" />
     <Compile Include="Models\Composition\CompositionContext.cs" />
     <Compile Include="Models\Configuration\GameEnvironment.cs" />
     <Compile Include="Models\Configuration\IGameEnvironment.cs" />
     <Compile Include="Models\Collections\BatchedCollection.cs" />
+    <Compile Include="Models\Events\TestEvent.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Events\EventPublisher.cs" />
     <Compile Include="Services\Events\IEventPublisher.cs" />
     <Compile Include="Services\Events\IEventSubscriber.cs" />
+    <Compile Include="Services\Events\TestEventSubscriber.cs" />
+    <Compile Include="Services\Game.cs" />
     <Compile Include="Services\IService.cs" />
     <Compile Include="Services\JobManagement\IJob.cs" />
     <Compile Include="Services\TestService.cs" />
