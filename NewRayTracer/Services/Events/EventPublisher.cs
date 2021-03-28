@@ -13,7 +13,7 @@ namespace NewRayTracer.Services.Events
             _subscribers = subscribers;
         }
 
-        public Task Publish(TEvent @event)
-            => Task.WhenAll(_subscribers.Select(s => s.Publish(@event)));
+        public Task PublishAsync(TEvent @event)
+            => Task.WhenAll(_subscribers.Select(s => s.PublishAsync(@event)));
     }
 }

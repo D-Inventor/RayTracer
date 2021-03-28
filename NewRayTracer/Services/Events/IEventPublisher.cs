@@ -4,6 +4,6 @@ namespace NewRayTracer.Services.Events
 {
     public interface IEventPublisher<TEvent>
     {
-        Task Publish(TEvent @event);
+        Task PublishAsync(TEvent @event);
     }
 }

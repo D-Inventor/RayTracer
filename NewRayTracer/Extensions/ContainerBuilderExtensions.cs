@@ -14,5 +14,10 @@ namespace NewRayTracer.Extensions
 
             return container;
         }
+
+        //public static ContainerBuilder RegisterJob<TJob>(this ContainerBuilder container, string alias) where TJob : IJob
+        //{
+
+        //}
     }
 }

@@ -14,7 +14,7 @@ namespace NewRayTracer.Services.Events
             _logger = logger;
         }
 
-        public Task Publish(TestEvent @event)
+        public Task PublishAsync(TestEvent @event)
         {
             _logger.Info("Event received: {0}", @event.Message);
             return Task.CompletedTask;

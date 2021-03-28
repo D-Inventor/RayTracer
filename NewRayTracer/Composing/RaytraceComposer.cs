@@ -1,5 +1,8 @@
 ﻿
+using Autofac;
+
 using NewRayTracer.Models.Composition;
+using NewRayTracer.Services.JobManagement;
 
 namespace NewRayTracer.Composing
 {
@@ -7,6 +10,7 @@ namespace NewRayTracer.Composing
     {
         public void Compose(CompositionContext context)
         {
+            context.Container.RegisterType<TestJob>().As<IJob>().InstancePerDependency();
         }
     }
 }

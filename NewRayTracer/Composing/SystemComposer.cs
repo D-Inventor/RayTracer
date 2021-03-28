@@ -3,6 +3,7 @@
 using NewRayTracer.Logging;
 using NewRayTracer.Models.Composition;
 using NewRayTracer.Services;
+using NewRayTracer.Services.JobManagement;
 
 namespace NewRayTracer.Composing
 {
@@ -23,6 +24,8 @@ namespace NewRayTracer.Composing
                              .InstancePerDependency();
 
             context.Container.RegisterDecorator<DecoratorIServiceLogging, IService>();
+            context.Container.RegisterDecorator<DecoratorIJobPerformanceLogger, IJob>();
+            context.Container.RegisterDecorator<DecoratorIJobEventPublishing, IJob>();
         }
     }
 }

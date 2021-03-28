@@ -17,10 +17,10 @@ namespace NewRayTracer.Services.Events
             _logger = logger;
         }
 
-        public Task Publish(TEvent @event)
+        public Task PublishAsync(TEvent @event)
         {
             _logger.Debug("Event fired: {0}", typeof(TEvent).GetFormattedName());
-            return _decoratee.Publish(@event);
+            return _decoratee.PublishAsync(@event);
         }
     }
 }

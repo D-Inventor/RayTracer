@@ -141,6 +141,7 @@
   <ItemGroup>
     <Compile Include="Builders\BatchedCollectionBuilder.cs" />
     <Compile Include="Builders\GameBuilder.cs" />
+    <Compile Include="Builders\JobRegistrationBuilder.cs" />
     <Compile Include="Composing\EventComposer.cs" />
     <Compile Include="Composing\IComposer.cs" />
     <Compile Include="Composing\RaytraceComposer.cs" />
@@ -154,6 +155,7 @@
     <Compile Include="Models\Configuration\GameEnvironment.cs" />
     <Compile Include="Models\Configuration\IGameEnvironment.cs" />
     <Compile Include="Models\Collections\BatchedCollection.cs" />
+    <Compile Include="Models\Events\JobFinishedEvent.cs" />
     <Compile Include="Models\Events\TestEvent.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -162,10 +164,14 @@
     <Compile Include="Services\Events\EventPublisher.cs" />
     <Compile Include="Services\Events\IEventPublisher.cs" />
     <Compile Include="Services\Events\IEventSubscriber.cs" />
+    <Compile Include="Services\Events\JobTriggerEventSubscriber.cs" />
     <Compile Include="Services\Events\TestEventSubscriber.cs" />
     <Compile Include="Services\Game.cs" />
     <Compile Include="Services\IService.cs" />
+    <Compile Include="Services\JobManagement\DecoratorIJobEventPublishing.cs" />
+    <Compile Include="Services\JobManagement\DecoratorIJobPerformanceLogger.cs" />
     <Compile Include="Services\JobManagement\IJob.cs" />
+    <Compile Include="Services\JobManagement\TestJob.cs" />
     <Compile Include="Services\TestService.cs" />
   </ItemGroup>
   <ItemGroup>
