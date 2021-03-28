@@ -10,6 +10,7 @@ namespace NewRayTracer.Composing
         public void Compose(CompositionContext context)
         {
             context.Container.RegisterGeneric(typeof(EventPublisher<>)).As(typeof(IEventPublisher<>));
+            context.Container.RegisterGenericDecorator(typeof(DecoratorIEventPublisherLogging<>), typeof(IEventPublisher<>));
         }
     }
 }

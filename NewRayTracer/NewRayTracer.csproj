@@ -147,6 +147,7 @@
     <Compile Include="Composing\SystemComposer.cs" />
     <Compile Include="Composing\TestComposer.cs" />
     <Compile Include="Extensions\ContainerBuilderExtensions.cs" />
+    <Compile Include="Extensions\TypeExtensions.cs" />
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Models\Composition\CompositionContext.cs" />
@@ -157,6 +158,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\DecoratorIServiceLogging.cs" />
+    <Compile Include="Services\Events\DecoratorIEventPublisherLogging.cs" />
     <Compile Include="Services\Events\EventPublisher.cs" />
     <Compile Include="Services\Events\IEventPublisher.cs" />
     <Compile Include="Services\Events\IEventSubscriber.cs" />

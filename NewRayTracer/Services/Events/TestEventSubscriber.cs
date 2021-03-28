@@ -1,7 +1,6 @@
 ﻿using NewRayTracer.Logging;
 using NewRayTracer.Models.Events;
 
-using System;
 using System.Threading.Tasks;
 
 namespace NewRayTracer.Services.Events

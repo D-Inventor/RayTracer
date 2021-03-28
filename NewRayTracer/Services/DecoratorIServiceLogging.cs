@@ -1,9 +1,6 @@
-﻿using NewRayTracer.Logging;
+﻿using NewRayTracer.Extensions;
+using NewRayTracer.Logging;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace NewRayTracer.Services
@@ -22,9 +19,9 @@ namespace NewRayTracer.Services
 
         public async Task ExecuteAsync()
         {
-            _logger.Info("Starting service: '{0}'", _decoratee.GetType().FullName);
+            _logger.Info("Starting service: {0}", _decoratee.GetType().GetFormattedName());
             await _decoratee.ExecuteAsync();
-            _logger.Info("Finished service: '{0}'", _decoratee.GetType().FullName);
+            _logger.Info("Finished service: {0}", _decoratee.GetType().GetFormattedName());
         }
     }
 }

@@ -3,6 +3,7 @@
 using Microsoft.Extensions.Configuration;
 
 using NewRayTracer.Composing;
+using NewRayTracer.Extensions;
 using NewRayTracer.Logging;
 using NewRayTracer.Models.Collections;
 using NewRayTracer.Models.Composition;
@@ -11,6 +12,7 @@ using NewRayTracer.Services;
 
 using Serilog;
 using Serilog.Core;
+using Serilog.Sinks.SystemConsole.Themes;
 
 using System.Linq;
 
@@ -47,8 +49,8 @@ namespace NewRayTracer.Builders
             composition.Add(new SystemComposer());
 
             AddLogging()
-                .MinimumLevel.Information()
-                .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}]({SourceContext}){NewLine}\t{Message:lj}{NewLine}{Exception}");
+                .MinimumLevel.Debug()
+                .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u}]({SourceContext}){NewLine}\t{Message:lj}{NewLine}{Exception}", theme: AnsiConsoleTheme.Literate);
 
             return this;
         }
@@ -65,11 +67,11 @@ namespace NewRayTracer.Builders
             CompositionContext context = new CompositionContext(containerBuilder, GameEnvironment.Instance, configuration, Serilogger);
             foreach(IComposer c in compositionCollection.SelectMany(c => c))
             {
-                logger.Info("Compose: {0}", c.GetType().FullName);
+                logger.Debug("Compose: {0}", c.GetType().GetFormattedName());
                 c.Compose(context);
             }
 
-            var container = containerBuilder.Build();
+            IContainer container = containerBuilder.Build();
             return new Game(container);
         }
     }

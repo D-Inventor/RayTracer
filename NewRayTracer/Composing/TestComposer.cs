@@ -6,8 +6,6 @@ using NewRayTracer.Models.Events;
 using NewRayTracer.Services;
 using NewRayTracer.Services.Events;
 
-using System;
-
 namespace NewRayTracer.Composing
 {
     public class TestComposer : IComposer

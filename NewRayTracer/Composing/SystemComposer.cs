@@ -4,8 +4,6 @@ using NewRayTracer.Logging;
 using NewRayTracer.Models.Composition;
 using NewRayTracer.Services;
 
-using Serilog;
-
 namespace NewRayTracer.Composing
 {
     public class SystemComposer : IComposer

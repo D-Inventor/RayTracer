@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace NewRayTracer.Services
@@ -24,9 +23,9 @@ namespace NewRayTracer.Services
 
         public async Task Run()
         {
-            using(var scope = _container.BeginLifetimeScope())
+            using(ILifetimeScope scope = _container.BeginLifetimeScope())
             {
-                var services = scope.Resolve<IEnumerable<IService>>();
+                IEnumerable<IService> services = scope.Resolve<IEnumerable<IService>>();
                 await Task.WhenAll(services.Select(s => s.ExecuteAsync())).ConfigureAwait(false);
             }
         }

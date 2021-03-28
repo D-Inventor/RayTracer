@@ -1,4 +1,6 @@
-﻿using Serilog;
+﻿using NewRayTracer.Extensions;
+
+using Serilog;
 
 using System;
 
@@ -10,7 +12,7 @@ namespace NewRayTracer.Logging
 
         public Logger(ILogger logger)
         {
-            _logger = logger.ForContext<TSource>();
+            _logger = logger.ForContext("SourceContext", typeof(TSource).GetFormattedName());
         }
 
         public void Error(Exception exception, string message, params object[] properties) => _logger.Error(exception, message, properties);

@@ -5,7 +5,6 @@ using Microsoft.Extensions.Configuration;
 using NewRayTracer.Models.Configuration;
 
 using Serilog;
-using Serilog.Core;
 
 namespace NewRayTracer.Models.Composition
 {
