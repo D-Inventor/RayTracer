@@ -140,6 +140,7 @@
     <Compile Include="Composing\RaytraceComposer.cs" />
     <Compile Include="Composing\SystemComposer.cs" />
     <Compile Include="Composing\TestComposer.cs" />
+    <Compile Include="Extensions\ContainerBuilderExtensions.cs" />
     <Compile Include="Models\Composition\CompositionContext.cs" />
     <Compile Include="Models\Configuration\GameEnvironment.cs" />
     <Compile Include="Models\Configuration\IGameEnvironment.cs" />

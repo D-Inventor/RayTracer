@@ -1,5 +1,6 @@
 ﻿using Autofac;
 
+using NewRayTracer.Extensions;
 using NewRayTracer.Models.Composition;
 using NewRayTracer.Models.Events;
 using NewRayTracer.Services;
@@ -17,9 +18,8 @@ namespace NewRayTracer.Composing
             context.Container.RegisterType<TestService>()
                              .As<IService>()
                              .InstancePerDependency();
-            context.Container.RegisterType<TestEventSubscriber>()
-                             .As<IEventSubscriber<TestEvent>>()
-                             .InstancePerDependency();
+
+            context.Container.SubscribeEvent<TestEventSubscriber, TestEvent>();
         }
     }
 }
