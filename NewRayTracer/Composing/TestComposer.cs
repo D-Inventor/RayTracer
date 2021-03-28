@@ -14,7 +14,6 @@ namespace NewRayTracer.Composing
     {
         public void Compose(CompositionContext context)
         {
-            Console.WriteLine("Test composer!");
             context.Container.RegisterType<TestService>()
                              .As<IService>()
                              .InstancePerDependency();

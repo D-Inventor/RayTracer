@@ -1,7 +1,6 @@
 ﻿using NewRayTracer.Models.Events;
 using NewRayTracer.Services.Events;
 
-using System;
 using System.Threading.Tasks;
 
 namespace NewRayTracer.Services
@@ -17,7 +16,6 @@ namespace NewRayTracer.Services
 
         public Task ExecuteAsync()
         {
-            Console.WriteLine("Running test service...");
             return _testEventPublisher.Publish(new TestEvent
             {
                 Message = "This is a test event!"

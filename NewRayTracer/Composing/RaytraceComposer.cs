@@ -11,7 +11,6 @@ namespace NewRayTracer.Composing
     {
         public void Compose(CompositionContext context)
         {
-            Console.WriteLine("Raytrace composer");
         }
     }
 }

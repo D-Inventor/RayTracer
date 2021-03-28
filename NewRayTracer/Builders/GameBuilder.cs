@@ -3,10 +3,14 @@
 using Microsoft.Extensions.Configuration;
 
 using NewRayTracer.Composing;
+using NewRayTracer.Logging;
 using NewRayTracer.Models.Collections;
 using NewRayTracer.Models.Composition;
 using NewRayTracer.Models.Configuration;
 using NewRayTracer.Services;
+
+using Serilog;
+using Serilog.Core;
 
 using System.Linq;
 
@@ -16,12 +20,16 @@ namespace NewRayTracer.Builders
     {
         private IConfigurationBuilder _configurationBuilder;
         private BatchedCollectionBuilder<IComposer> _compositionBuilder;
+        private LoggerConfiguration _loggerConfiguration;
 
         public IConfigurationBuilder AddConfiguration()
             => _configurationBuilder = _configurationBuilder ?? new ConfigurationBuilder();
 
         public BatchedCollectionBuilder<IComposer> AddComposition()
             => _compositionBuilder = _compositionBuilder ?? new BatchedCollectionBuilder<IComposer>();
+
+        public LoggerConfiguration AddLogging()
+            => _loggerConfiguration = _loggerConfiguration ?? new LoggerConfiguration();
 
 
         public GameBuilder CreateDefault()
@@ -38,6 +46,10 @@ namespace NewRayTracer.Builders
             composition.Add(new EventComposer());
             composition.Add(new SystemComposer());
 
+            AddLogging()
+                .MinimumLevel.Information()
+                .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}]({SourceContext}){NewLine}\t{Message:lj}{NewLine}{Exception}");
+
             return this;
         }
 
@@ -45,12 +57,15 @@ namespace NewRayTracer.Builders
         {
             IConfigurationRoot configuration = _configurationBuilder.Build();
             BatchedCollection<IComposer> compositionCollection = _compositionBuilder.Build();
+            Logger Serilogger = _loggerConfiguration.CreateLogger();
+            ILogger<GameBuilder> logger = new Logger<GameBuilder>(Serilogger);
 
             ContainerBuilder containerBuilder = new ContainerBuilder();
 
-            CompositionContext context = new CompositionContext(containerBuilder, GameEnvironment.Instance, configuration);
+            CompositionContext context = new CompositionContext(containerBuilder, GameEnvironment.Instance, configuration, Serilogger);
             foreach(IComposer c in compositionCollection.SelectMany(c => c))
             {
+                logger.Info("Compose: {0}", c.GetType().FullName);
                 c.Compose(context);
             }
 

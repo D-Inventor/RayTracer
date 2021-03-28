@@ -1,4 +1,5 @@
-﻿using NewRayTracer.Models.Events;
+﻿using NewRayTracer.Logging;
+using NewRayTracer.Models.Events;
 
 using System;
 using System.Threading.Tasks;
@@ -7,9 +8,16 @@ namespace NewRayTracer.Services.Events
 {
     public class TestEventSubscriber : IEventSubscriber<TestEvent>
     {
+        private readonly ILogger<TestEventSubscriber> _logger;
+
+        public TestEventSubscriber(ILogger<TestEventSubscriber> logger)
+        {
+            _logger = logger;
+        }
+
         public Task Publish(TestEvent @event)
         {
-            Console.WriteLine("Event received: {0}", @event.Message);
+            _logger.Info("Event received: {0}", @event.Message);
             return Task.CompletedTask;
         }
     }
