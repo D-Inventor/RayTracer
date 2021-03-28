@@ -3,14 +3,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NewRayTracer.Builders
 {
     public class BatchedCollectionBuilder<T>
     {
-        List<BatchItem<T>> _collection;
+        private List<BatchItem<T>> _collection;
         
         public BatchedCollectionBuilder()
         {
@@ -19,7 +17,7 @@ namespace NewRayTracer.Builders
 
         public BatchItem<T> Add(T value)
         {
-            var item = new BatchItem<T>(value);
+            BatchItem<T> item = new BatchItem<T>(value);
             _collection.Add(item);
             return item;
         }
@@ -37,25 +35,25 @@ namespace NewRayTracer.Builders
                 HashSet<BatchItem<T>> propagationList = new HashSet<BatchItem<T>>();
                 for(int i = batches[step].Count - 1; i >= 0; i--)
                 {
-                    var pivot = batches[step][i];
+                    BatchItem<T> pivot = batches[step][i];
                     for(int j = i - 1; j >= 0; j--)
                     {
                         // compare all the elements in the current step and add elements to the propagation list if they have a restriction.
-                        var compareTo = batches[step][j];
+                        BatchItem<T> compareTo = batches[step][j];
                         
                         bool later = false;
                         bool earlier = false;
 
-                        foreach(var restriction in pivot.Restrictions)
+                        foreach(IComparer<BatchItem<T>> restriction in pivot.Restrictions)
                         {
-                            var comparison = restriction.Compare(pivot, compareTo);
+                            int comparison = restriction.Compare(pivot, compareTo);
                             later = later || comparison > 0;
                             earlier = earlier || comparison < 0;
                         }
 
-                        foreach (var restriction in compareTo.Restrictions)
+                        foreach (IComparer<BatchItem<T>> restriction in compareTo.Restrictions)
                         {
-                            var comparison = restriction.Compare(compareTo, pivot);
+                            int comparison = restriction.Compare(compareTo, pivot);
                             later = later || comparison < 0;
                             earlier = earlier || comparison > 0;
                         }
@@ -73,7 +71,7 @@ namespace NewRayTracer.Builders
                 // if all the elements have to be propagated, then there is a circular restriction.
                 if (propagationList.Count == batches[step].Count) throw new Exception("Found circular restrictions.");
 
-                foreach(var element in propagationList)
+                foreach(BatchItem<T> element in propagationList)
                 {
                     batches[step].Remove(element);
                 }

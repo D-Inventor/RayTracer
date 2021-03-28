@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 
 using NewRayTracer.Composing;
+using NewRayTracer.Models.Collections;
 using NewRayTracer.Models.Composition;
 using NewRayTracer.Models.Configuration;
 
@@ -28,7 +29,7 @@ namespace NewRayTracer.Builders
                 .AddJsonFile("Appsettings.json")
                 .AddJsonFile($"Appsettings.{GameEnvironment.Instance.Environent}.json");
 
-            var composition = AddComposition();
+            BatchedCollectionBuilder<IComposer> composition = AddComposition();
             composition.Add(new RaytraceComposer()).After<TestComposer>();
             composition.Add(new TestComposer());
 
@@ -37,11 +38,11 @@ namespace NewRayTracer.Builders
 
         public void Build()
         {
-            var configuration = _configurationBuilder.Build();
-            var compositionCollection = _compositionBuilder.Build();
+            IConfigurationRoot configuration = _configurationBuilder.Build();
+            BatchedCollection<IComposer> compositionCollection = _compositionBuilder.Build();
 
-            var context = new CompositionContext();
-            foreach(var c in compositionCollection.SelectMany(c => c))
+            CompositionContext context = new CompositionContext();
+            foreach(IComposer c in compositionCollection.SelectMany(c => c))
             {
                 c.Compose(context);
             }
