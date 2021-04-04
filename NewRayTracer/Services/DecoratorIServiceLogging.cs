@@ -20,7 +20,7 @@ namespace NewRayTracer.Services
 
         public async Task ExecuteAsync()
         {
-            var displayName = Decoratee.UnwrapDecorators().GetType().GetFormattedName();
+            string displayName = Decoratee.UnwrapDecorators().GetType().GetFormattedName();
             _logger.Info("Starting service: {0}", displayName);
             await Decoratee.ExecuteAsync();
             _logger.Info("Finished service: {0}", displayName);

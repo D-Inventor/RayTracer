@@ -18,7 +18,7 @@ namespace NewRayTracer.Composing
                              .As<IService>()
                              .InstancePerDependency();
 
-            var jobsBuilder = context.AddBuilder<JobRegistrationBuilder>();
+            JobRegistrationBuilder jobsBuilder = context.AddBuilder<JobRegistrationBuilder>();
             jobsBuilder.AddJob<TestJob>();
             jobsBuilder.AddJob<OtherTestJob>();
             jobsBuilder.AddJob<JetAnotherJob>().Before<TestJob>().Before<OtherTestJob>();

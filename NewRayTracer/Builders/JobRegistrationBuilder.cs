@@ -28,7 +28,7 @@ namespace NewRayTracer.Builders
 
         public JobRegistrationBuilder AddConstraint(Type first, Type second)
         {
-            var constraints = _jobConstraints[second] = _jobConstraints.ContainsKey(second) ? _jobConstraints[second] : new HashSet<Type>();
+            ISet<Type> constraints = _jobConstraints[second] = _jobConstraints.ContainsKey(second) ? _jobConstraints[second] : new HashSet<Type>();
             constraints.Add(first);
             return this;
         }
@@ -58,9 +58,9 @@ namespace NewRayTracer.Builders
                        .InstancePerDependency();
             }
 
-            foreach(var kvp in _jobConstraints)
+            foreach(KeyValuePair<Type, ISet<Type>> kvp in _jobConstraints)
             {
-                var constraint = new JobConstraint(kvp.Key, kvp.Value);
+                JobConstraint constraint = new JobConstraint(kvp.Key, kvp.Value);
                 context.Container
                        .RegisterInstance(constraint)
                        .As<IJobConstraint>()

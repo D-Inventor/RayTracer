@@ -21,7 +21,7 @@ namespace NewRayTracer.Services.JobManagement
 
         public async Task DoAsync()
         {
-            var displayName = Decoratee.UnwrapDecorators().GetType().GetFormattedName();
+            string displayName = Decoratee.UnwrapDecorators().GetType().GetFormattedName();
             _logger.Debug("Starting job {0}", displayName);
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();

@@ -49,7 +49,7 @@ namespace NewRayTracer.Models.Composition
             {
                 if (disposing)
                 {
-                    foreach (var builder in _builders) builder.Value.Register(this);
+                    foreach (KeyValuePair<Type, IRegistrationBuilder> builder in _builders) builder.Value.Register(this);
                 }
 
                 _disposedValue = true;

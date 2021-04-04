@@ -1,8 +1,4 @@
-﻿using Autofac;
-
-using NewRayTracer.Builders;
-using NewRayTracer.Models.Composition;
-using NewRayTracer.Services.JobManagement;
+﻿using NewRayTracer.Models.Composition;
 
 namespace NewRayTracer.Composing
 {
