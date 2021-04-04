@@ -1,6 +1,7 @@
 ﻿using Autofac;
 
 using NewRayTracer.Models.Composition;
+using NewRayTracer.Services;
 using NewRayTracer.Services.JobManagement;
 
 using System;
@@ -39,6 +40,11 @@ namespace NewRayTracer.Builders
 
         public void Register(CompositionContext context)
         {
+            context.Container
+                   .RegisterType<JobService>()
+                   .As<IService>()
+                   .InstancePerDependency();
+
             context.Container
                    .RegisterType<JobManager>()
                    .As<IJobManager>()

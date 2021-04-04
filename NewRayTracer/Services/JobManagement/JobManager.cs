@@ -26,13 +26,16 @@ namespace NewRayTracer.Services.JobManagement
 
             do
             {
+                // wait for any started job to finish
                 if(started.Any())
                     await Task.WhenAny(started.Values);
 
+                // move jobs that have finished to the finished jobs
                 var newlyFinished = started.Where(kvp => kvp.Value.IsCompleted).Select(kvp => kvp.Key).ToList();
                 finished.UnionWith(newlyFinished);
                 foreach (var f in newlyFinished) started.Remove(f);
 
+                // find any jobs that are not constrained and start them
                 var constrainedJobs = _constraints.Where(c => !c.Constraints.IsSubsetOf(finished)).Select(c => c.Job);
                 var startableJobs = unstarted.Except(constrainedJobs).ToList();
                 unstarted.ExceptWith(startableJobs);
@@ -40,6 +43,8 @@ namespace NewRayTracer.Services.JobManagement
                 {
                     started[job] = _jobs[job].DoAsync();
                 }
+
+                // stop when no jobs are on the list
             } while (started.Count > 0);
         }
     }

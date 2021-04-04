@@ -181,6 +181,7 @@
     <Compile Include="Services\JobManagement\JetAnotherJob.cs" />
     <Compile Include="Services\JobManagement\JobConstraint.cs" />
     <Compile Include="Services\JobManagement\JobManager.cs" />
+    <Compile Include="Services\JobManagement\JobService.cs" />
     <Compile Include="Services\JobManagement\OtherTestJob.cs" />
     <Compile Include="Services\JobManagement\TestJob.cs" />
     <Compile Include="Services\TestService.cs" />
