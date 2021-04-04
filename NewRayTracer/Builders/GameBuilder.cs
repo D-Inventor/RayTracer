@@ -18,7 +18,7 @@ using System.Linq;
 
 namespace NewRayTracer.Builders
 {
-    public class GameBuilder
+    public class GameBuilder : IBuilder<Game>
     {
         private IConfigurationBuilder _configurationBuilder;
         private BatchedCollectionBuilder<IComposer> _compositionBuilder;
@@ -64,11 +64,13 @@ namespace NewRayTracer.Builders
 
             ContainerBuilder containerBuilder = new ContainerBuilder();
 
-            CompositionContext context = new CompositionContext(containerBuilder, GameEnvironment.Instance, configuration, Serilogger);
-            foreach(IComposer c in compositionCollection.SelectMany(c => c))
+            using (CompositionContext context = new CompositionContext(containerBuilder, GameEnvironment.Instance, configuration, Serilogger))
             {
-                logger.Debug("Compose: {0}", c.GetType().GetFormattedName());
-                c.Compose(context);
+                foreach (IComposer c in compositionCollection.SelectMany(c => c))
+                {
+                    logger.Debug("Compose: {0}", c.GetType().GetFormattedName());
+                    c.Compose(context);
+                }
             }
 
             IContainer container = containerBuilder.Build();

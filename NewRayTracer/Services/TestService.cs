@@ -9,12 +9,12 @@ namespace NewRayTracer.Services
     public class TestService : IService
     {
         private readonly IEventPublisher<TestEvent> _testEventPublisher;
-        private readonly IJob _job;
+        private readonly IJobManager _jobManager;
 
-        public TestService(IEventPublisher<TestEvent> TestEventPublisher, IJob job)
+        public TestService(IEventPublisher<TestEvent> TestEventPublisher, IJobManager jobManager)
         {
             _testEventPublisher = TestEventPublisher;
-            _job = job;
+            _jobManager = jobManager;
         }
 
         public async Task ExecuteAsync()
@@ -24,7 +24,7 @@ namespace NewRayTracer.Services
                 Message = "This is a test event!"
             });
 
-            await _job.DoAsync();
+            await _jobManager.ExecuteAsync();
         }
     }
 }

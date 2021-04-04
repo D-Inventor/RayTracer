@@ -2,8 +2,8 @@
 
 namespace NewRayTracer.Services.JobManagement
 {
-    public interface IJob
+    public interface IJobManager
     {
-        Task DoAsync();
+        Task ExecuteAsync();
     }
 }

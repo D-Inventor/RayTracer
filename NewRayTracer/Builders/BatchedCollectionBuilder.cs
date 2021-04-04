@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace NewRayTracer.Builders
 {
-    public class BatchedCollectionBuilder<T>
+    public class BatchedCollectionBuilder<T> : IBuilder<BatchedCollection<T>>
     {
         private List<BatchItem<T>> _collection;
         

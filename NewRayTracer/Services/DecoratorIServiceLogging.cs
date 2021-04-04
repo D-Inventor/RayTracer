@@ -5,23 +5,25 @@ using System.Threading.Tasks;
 
 namespace NewRayTracer.Services
 {
-    public class DecoratorIServiceLogging : IService
+    public class DecoratorIServiceLogging : IService, IDecorator<IService>
     {
-        private readonly IService _decoratee;
         private readonly ILogger<IService> _logger;
 
         public DecoratorIServiceLogging(IService decoratee,
                                         ILogger<IService> logger)
         {
-            _decoratee = decoratee;
+            Decoratee = decoratee;
             _logger = logger;
         }
 
+        public IService Decoratee { get; }
+
         public async Task ExecuteAsync()
         {
-            _logger.Info("Starting service: {0}", _decoratee.GetType().GetFormattedName());
-            await _decoratee.ExecuteAsync();
-            _logger.Info("Finished service: {0}", _decoratee.GetType().GetFormattedName());
+            var displayName = Decoratee.UnwrapDecorators().GetType().GetFormattedName();
+            _logger.Info("Starting service: {0}", displayName);
+            await Decoratee.ExecuteAsync();
+            _logger.Info("Finished service: {0}", displayName);
         }
     }
 }

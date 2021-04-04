@@ -141,6 +141,9 @@
   <ItemGroup>
     <Compile Include="Builders\BatchedCollectionBuilder.cs" />
     <Compile Include="Builders\GameBuilder.cs" />
+    <Compile Include="Builders\IBuilder.cs" />
+    <Compile Include="Builders\IRegistrationBuilder.cs" />
+    <Compile Include="Builders\JobConstraintBuilder.cs" />
     <Compile Include="Builders\JobRegistrationBuilder.cs" />
     <Compile Include="Composing\EventComposer.cs" />
     <Compile Include="Composing\IComposer.cs" />
@@ -148,6 +151,7 @@
     <Compile Include="Composing\SystemComposer.cs" />
     <Compile Include="Composing\TestComposer.cs" />
     <Compile Include="Extensions\ContainerBuilderExtensions.cs" />
+    <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Extensions\TypeExtensions.cs" />
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\Logger.cs" />
@@ -167,10 +171,17 @@
     <Compile Include="Services\Events\JobTriggerEventSubscriber.cs" />
     <Compile Include="Services\Events\TestEventSubscriber.cs" />
     <Compile Include="Services\Game.cs" />
+    <Compile Include="Services\IDecorator.cs" />
     <Compile Include="Services\IService.cs" />
     <Compile Include="Services\JobManagement\DecoratorIJobEventPublishing.cs" />
     <Compile Include="Services\JobManagement\DecoratorIJobPerformanceLogger.cs" />
     <Compile Include="Services\JobManagement\IJob.cs" />
+    <Compile Include="Services\JobManagement\IJobConstraint.cs" />
+    <Compile Include="Services\JobManagement\IJobManager.cs" />
+    <Compile Include="Services\JobManagement\JetAnotherJob.cs" />
+    <Compile Include="Services\JobManagement\JobConstraint.cs" />
+    <Compile Include="Services\JobManagement\JobManager.cs" />
+    <Compile Include="Services\JobManagement\OtherTestJob.cs" />
     <Compile Include="Services\JobManagement\TestJob.cs" />
     <Compile Include="Services\TestService.cs" />
   </ItemGroup>

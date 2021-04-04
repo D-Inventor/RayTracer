@@ -2,11 +2,11 @@
 
 namespace NewRayTracer.Services.JobManagement
 {
-    public class TestJob : IJob
+    public class JetAnotherJob : IJob
     {
         public Task DoAsync()
         {
-            return Task.Delay(5000);
+            return Task.Delay(7000);
         }
     }
 }

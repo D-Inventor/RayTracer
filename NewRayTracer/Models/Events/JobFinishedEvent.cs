@@ -9,6 +9,6 @@ namespace NewRayTracer.Models.Events
             Job = job;
         }
 
-        IJob Job { get; }
+        private IJob Job { get; }
     }
 }
